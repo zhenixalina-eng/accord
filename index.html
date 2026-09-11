@@ -1,0 +1,1143 @@
+<meta charset="utf-8">
+<title>Укулельная тетрадь</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Yeseva+One&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+
+  :root {
+    --bg: #f1ead9;
+    --surface: #e9ddc5;
+    --surface-2: #ddcca6;
+    --border: #cab791;
+    --ink: #2b2013;
+    --ink-soft: #6d5c43;
+    --accent: #85601c;
+    --accent-strong: #5c3f10;
+    --accent-wash: rgba(133, 96, 28, 0.14);
+    --shadow: rgba(60, 44, 20, 0.16);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #1a130c;
+      --surface: #241a10;
+      --surface-2: #2f2314;
+      --border: #4a3a23;
+      --ink: #ece1cd;
+      --ink-soft: #b3a084;
+      --accent: #dcb75f;
+      --accent-strong: #ffd479;
+      --accent-wash: rgba(220, 183, 95, 0.16);
+      --shadow: rgba(0, 0, 0, 0.4);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #1a130c;
+    --surface: #241a10;
+    --surface-2: #2f2314;
+    --border: #4a3a23;
+    --ink: #ece1cd;
+    --ink-soft: #b3a084;
+    --accent: #dcb75f;
+    --accent-strong: #ffd479;
+    --accent-wash: rgba(220, 183, 95, 0.16);
+    --shadow: rgba(0, 0, 0, 0.4);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Golos Text', system-ui, sans-serif;
+    padding: 0 20px;
+    padding-block: 28px 64px;
+  }
+
+  a { color: inherit; }
+
+  .wrap {
+    max-width: 1040px;
+    margin: 0 auto;
+  }
+
+  header.site {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 18px;
+    margin-bottom: 28px;
+  }
+
+  .site-title {
+    font-family: 'Yeseva One', serif;
+    font-size: clamp(28px, 4vw, 38px);
+    letter-spacing: 0.2px;
+    text-wrap: balance;
+  }
+
+  .site-tagline {
+    color: var(--ink-soft);
+    font-size: 14px;
+    max-width: 40ch;
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 250px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  nav.songlist {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: sticky;
+    top: 20px;
+  }
+
+  @media (max-width: 760px) {
+    nav.songlist { position: static; }
+  }
+
+  .songlist h2 {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-soft);
+    font-weight: 600;
+    margin: 0 0 2px 2px;
+  }
+
+  .artist-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .artist-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    padding: 4px 2px;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--ink);
+    text-align: left;
+    width: 100%;
+  }
+
+  .artist-head:hover .artist-name { color: var(--accent-strong); }
+  .artist-head:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  .artist-head .chev {
+    font-size: 10px;
+    color: var(--ink-soft);
+    transition: transform 0.15s ease;
+  }
+
+  .artist-group.collapsed .chev { transform: rotate(-90deg); }
+  .artist-group.collapsed .song-btn { display: none; }
+
+  .artist-name {
+    font-size: 13px;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .artist-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .song-btn {
+    text-align: left;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 9px 12px;
+    margin-left: 14px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .song-btn:hover { background: var(--surface-2); }
+
+  .song-btn.active {
+    background: var(--accent-wash);
+    border-color: var(--accent);
+    font-weight: 600;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .artist-head .chev { transition: none; }
+  }
+
+  main.sheet {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px clamp(16px, 3vw, 32px) 32px;
+    box-shadow: 0 8px 24px -12px var(--shadow);
+  }
+
+  .sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px dashed var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+  }
+
+  .song-title {
+    font-family: 'Yeseva One', serif;
+    font-size: clamp(22px, 3.4vw, 30px);
+    text-wrap: balance;
+  }
+
+  .song-artist { color: var(--ink-soft); font-size: 14px; margin-top: 2px; }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .ctrl-group {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 4px 6px;
+  }
+
+  .ctrl-group span.label {
+    font-size: 11px;
+    color: var(--ink-soft);
+    padding: 0 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .ctrl-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .ctrl-btn:hover { background: var(--accent-wash); border-color: var(--accent); }
+  .ctrl-btn:focus-visible, .song-btn:focus-visible, .chord-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .scrollctl {
+    position: fixed;
+    top: 50%;
+    right: 14px;
+    transform: translateY(-50%);
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 8px 6px;
+    box-shadow: 0 10px 24px -8px var(--shadow);
+  }
+
+  .scroll-arrow {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .scroll-arrow:hover { background: var(--accent-wash); border-color: var(--accent); }
+  .scroll-arrow:active { background: var(--accent); color: var(--surface); }
+
+  .scroll-speed-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--accent-strong);
+    min-height: 1.2em;
+  }
+
+  .scroll-speed-val.active { color: var(--accent); }
+
+  @media (max-width: 500px) {
+    .scrollctl { top: auto; bottom: 14px; right: auto; left: 10px; transform: none; }
+  }
+
+  .inst-btn {
+    border: 1px solid transparent;
+    background: none;
+    color: var(--ink-soft);
+    font-family: inherit;
+    font-size: 12.5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+
+  .inst-btn:hover { color: var(--ink); }
+
+  .inst-btn.active {
+    background: var(--accent-wash);
+    border-color: var(--accent);
+    color: var(--accent-strong);
+    font-weight: 600;
+  }
+
+  .inst-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .key-badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    color: var(--accent-strong);
+    min-width: 2.4ch;
+    text-align: center;
+    font-size: 13.5px;
+  }
+
+  .fontsize-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    min-width: 3ch;
+    text-align: center;
+  }
+
+  .variant-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .variant-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    margin-right: 2px;
+  }
+
+  .variant-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 5px 12px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+
+  .variant-btn:hover { border-color: var(--accent); color: var(--ink); }
+
+  .variant-btn.active {
+    background: var(--accent-wash);
+    border-color: var(--accent);
+    color: var(--accent-strong);
+    font-weight: 600;
+  }
+
+  .variant-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .chord-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .chord-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 6px 10px 4px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-family: inherit;
+  }
+
+  .chord-card:hover { border-color: var(--accent); }
+
+  .chord-card.pinned {
+    border-color: var(--accent);
+    color: var(--accent-strong);
+    background: var(--accent-wash);
+  }
+
+  .chord-card .cc-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--ink);
+  }
+
+  .chord-card.pinned .cc-name { color: var(--accent-strong); }
+
+  .chord-card .cc-noshape {
+    font-size: 10px;
+    color: var(--ink-soft);
+    padding: 14px 4px;
+  }
+
+  .chord-card .pin-ico {
+    position: absolute;
+    top: 3px;
+    right: 3px;
+    opacity: 0.55;
+  }
+
+  .chord-card.pinned .pin-ico { opacity: 1; }
+
+  .chord-svg { display: block; color: inherit; }
+
+  .pinned-panel {
+    position: fixed;
+    right: 14px;
+    top: 14px;
+    z-index: 50;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px;
+    box-shadow: 0 10px 26px -8px var(--shadow);
+    max-height: 62vh;
+    overflow-y: auto;
+    width: min(150px, 38vw);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .pinned-panel .ph {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+
+  .pinned-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 4px 4px 2px;
+    color: var(--accent-strong);
+  }
+
+  .pinned-item .cc-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 800;
+    font-size: 13px;
+  }
+
+  .unpin-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 10px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .chordsheet-scroll {
+    overflow-x: auto;
+    padding-bottom: 4px;
+    cursor: pointer;
+  }
+
+  .chordsheet {
+    font-family: 'JetBrains Mono', monospace;
+    line-height: 1.55;
+    white-space: pre;
+    width: max-content;
+    min-width: 100%;
+  }
+
+  .line { margin-bottom: 2px; }
+  .line.blank { height: 0.9em; }
+
+  .chords {
+    color: var(--accent-strong);
+    font-weight: 800;
+  }
+
+
+  .lyrics { color: var(--ink); }
+
+  footer.note {
+    margin-top: 22px;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    text-align: center;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    main.sheet { animation: rise 0.25s ease-out; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="site">
+    <div>
+      <div class="site-title">Укулельная тетрадь</div>
+      <div class="site-tagline">Аккорды, переснятые из тетради и скринов — набело, для игры на укулеле и гитаре.</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="songlist" id="songlist" aria-label="Список песен">
+      <h2>Песни</h2>
+    </nav>
+
+    <main class="sheet" id="sheet"></main>
+  </div>
+
+  <footer class="note">Тапни по тексту песни, чтобы поставить автопрокрутку на паузу. Транспонирование сдвигает все аккорды песни.</footer>
+</div>
+
+<div class="pinned-panel" id="pinned-panel" hidden>
+  <div class="ph">Закреплено</div>
+  <div class="pinned-list" id="pinned-list"></div>
+</div>
+
+<div class="scrollctl" id="scrollctl">
+  <button type="button" class="scroll-arrow" id="scroll-faster" aria-label="Быстрее (запускает прокрутку)">▲</button>
+  <div class="scroll-speed-val" id="scroll-speed-val">0</div>
+  <button type="button" class="scroll-arrow" id="scroll-slower" aria-label="Медленнее">▼</button>
+</div>
+
+<script>
+  let SONGS = [];
+
+  // Файл песни: шапка (title/artist/key), пустая строка, дальше текст с аккордами.
+  // Если для песни есть несколько вариантов аккордов, каждый начинается строкой
+  // «--- Название варианта», под которой может стоять свой key.
+  function parseSongFile(text) {
+    const lines = text.split('\n');
+    let i = 0;
+    const meta = {};
+    while (i < lines.length && lines[i].trim() !== '') {
+      const m = lines[i].match(/^(\w+):\s*(.*)$/);
+      if (m) meta[m[1]] = m[2].trim();
+      i++;
+    }
+
+    const song = { title: meta.title || '', artist: meta.artist || '', key: meta.key || '' };
+    const variants = [];
+    let current = null;
+
+    const flush = () => {
+      if (!current) return;
+      const body = current.lines.join('\n').replace(/^\n+|\n+$/g, '');
+      if (body) variants.push({ name: current.name, key: current.key || song.key, body });
+    };
+
+    for (; i < lines.length; i++) {
+      const head = lines[i].match(/^---\s*(.*)$/);
+      if (head) {
+        flush();
+        current = { name: head[1].trim() || `Вариант ${variants.length + 1}`, key: '', lines: [] };
+        continue;
+      }
+      if (!current) current = { name: '', key: '', lines: [] };
+      const keyLine = !current.lines.some(l => l.trim()) && lines[i].match(/^key:\s*(.*)$/);
+      if (keyLine) { current.key = keyLine[1].trim(); continue; }
+      current.lines.push(lines[i]);
+    }
+    flush();
+
+    song.variants = variants.length ? variants : [{ name: '', key: song.key, body: '' }];
+    return song;
+  }
+
+  // === SONGS DATA START (генерируется build.mjs из songs/*.txt — вручную не править) ===
+  const SONG_FILES = {};
+  // === SONGS DATA END ===
+
+  function songFromFile(fname, text) {
+    return { id: fname.replace(/\.txt$/, ''), ...parseSongFile(text) };
+  }
+
+  // Опубликованная страница берёт песни из вшитого SONG_FILES (его наполняет build.mjs).
+  // Пустой SONG_FILES означает локальную разработку — тогда читаем songs/ напрямую.
+  async function loadSongs() {
+    const inline = Object.entries(SONG_FILES);
+    if (inline.length) return inline.map(([fname, text]) => songFromFile(fname, text));
+
+    const idxRes = await fetch('songs/index.json');
+    if (!idxRes.ok) throw new Error('songs/index.json: HTTP ' + idxRes.status);
+    const files = await idxRes.json();
+    return Promise.all(files.map(async fname => {
+      const res = await fetch('songs/' + fname);
+      if (!res.ok) throw new Error(fname + ': HTTP ' + res.status);
+      return songFromFile(fname, await res.text());
+    }));
+  }
+
+  const NOTES = ['C','C#','D','D#','E','F','F#','G','G#','A','A#','B'];
+  const FLAT_TO_SHARP = { Db:'C#', Eb:'D#', Gb:'F#', Ab:'G#', Bb:'A#' };
+
+  // Аппликатуры: номера ладов по струнам, 0 — открытая, -1 — глушится.
+  // Укулеле — строй GCEA (4 струны), гитара — EADGBE (6 струн, от басовой к тонкой).
+  const SHAPES = {
+    uke: {
+      'C':[0,0,0,3], 'C#':[1,1,1,4], 'D':[2,2,2,0], 'D#':[3,3,3,1], 'E':[4,4,4,2], 'F':[2,0,1,0],
+      'F#':[3,1,2,1], 'G':[0,2,3,2], 'G#':[1,3,4,3], 'A':[2,1,0,0], 'A#':[3,2,1,1], 'B':[4,3,2,2],
+      'Cm':[0,3,3,3], 'C#m':[1,4,4,4], 'Dm':[2,2,1,0], 'D#m':[3,3,2,1], 'Em':[0,4,3,2], 'Fm':[1,0,1,3],
+      'F#m':[2,1,2,4], 'Gm':[0,2,3,1], 'G#m':[1,3,4,2], 'Am':[2,0,0,0], 'A#m':[3,1,1,1], 'Bm':[4,2,2,2],
+      'C7':[0,0,0,1], 'C#7':[1,1,1,2], 'D7':[2,2,2,3], 'D#7':[3,3,3,4], 'E7':[1,2,0,2], 'F7':[2,3,1,3],
+      'F#7':[3,4,2,4], 'G7':[0,2,1,2], 'G#7':[1,3,2,3], 'A7':[0,1,0,0], 'A#7':[1,2,1,1], 'B7':[2,3,2,2]
+    },
+    guitar: {
+      'C':[-1,3,2,0,1,0], 'C#':[-1,4,3,1,2,1], 'D':[-1,-1,0,2,3,2], 'D#':[-1,-1,1,3,4,3],
+      'E':[0,2,2,1,0,0], 'F':[1,3,3,2,1,1], 'F#':[2,4,4,3,2,2], 'G':[3,2,0,0,0,3],
+      'G#':[4,6,6,5,4,4], 'A':[-1,0,2,2,2,0], 'A#':[-1,1,3,3,3,1], 'B':[-1,2,4,4,4,2],
+      'Cm':[-1,3,5,5,4,3], 'C#m':[-1,4,6,6,5,4], 'Dm':[-1,-1,0,2,3,1], 'D#m':[-1,-1,1,3,4,2],
+      'Em':[0,2,2,0,0,0], 'Fm':[1,3,3,1,1,1], 'F#m':[2,4,4,2,2,2], 'Gm':[3,5,5,3,3,3],
+      'G#m':[4,6,6,4,4,4], 'Am':[-1,0,2,2,1,0], 'A#m':[-1,1,3,3,2,1], 'Bm':[-1,2,4,4,3,2],
+      'C7':[-1,3,2,3,1,0], 'C#7':[-1,4,3,4,2,1], 'D7':[-1,-1,0,2,1,2], 'D#7':[-1,-1,1,3,2,3],
+      'E7':[0,2,0,1,0,0], 'F7':[1,3,1,2,1,1], 'F#7':[2,4,2,3,2,2], 'G7':[3,2,0,0,0,1],
+      'G#7':[4,6,4,5,4,4], 'A7':[-1,0,2,0,2,0], 'A#7':[-1,1,3,1,3,1], 'B7':[-1,2,1,2,0,2]
+    }
+  };
+
+  const INSTRUMENTS = { uke: 'Укулеле', guitar: 'Гитара' };
+
+  function transposeChord(chord, semitones) {
+    if (!semitones) return chord;
+    const m = chord.match(/^([A-G])(#|b)?(.*)$/);
+    if (!m) return chord;
+    const [, root, acc, rest] = m;
+    let note = root + (acc || '');
+    if (FLAT_TO_SHARP[note]) note = FLAT_TO_SHARP[note];
+    const idx = NOTES.indexOf(note);
+    if (idx === -1) return chord;
+    const shifted = NOTES[(idx + semitones + 1200) % 12];
+    return shifted + rest;
+  }
+
+  function shapeKeyFor(chord) {
+    const m = chord.match(/^([A-G])(#|b)?(m|7)?$/);
+    if (!m) return null;
+    const [, root, acc, qual] = m;
+    let note = root + (acc || '');
+    if (FLAT_TO_SHARP[note]) note = FLAT_TO_SHARP[note];
+    return note + (qual || '');
+  }
+
+  function shapeFor(chord) {
+    const key = shapeKeyFor(chord);
+    return key ? SHAPES[state.instrument][key] : null;
+  }
+
+  // Баррэ: на самом нижнем прижатом ладу две и больше струн, между крайними из них нет
+  // струн ниже этого лада, и палец дотягивается до края играемых струн. Иначе это
+  // обычная постановка разными пальцами (например, гитарный A — три пальца, а не баррэ).
+  function barreSpan(shape) {
+    const fretted = shape.filter(f => f > 0);
+    if (!fretted.length) return null;
+    const fret = Math.min(...fretted);
+    const at = shape.reduce((acc, f, i) => (f === fret ? [...acc, i] : acc), []);
+    if (at.length < 2) return null;
+    const from = at[0], to = at[at.length - 1];
+    for (let i = from; i <= to; i++) if (shape[i] < fret) return null;
+    const played = shape.reduce((acc, f, i) => (f >= 0 ? [...acc, i] : acc), []);
+    const fromBass = from === played[0];
+    const solidRun = shape.slice(from, to + 1).every(f => f === fret);
+    const smallBarre = solidRun && to === played[played.length - 1];
+    if (!fromBass && !smallBarre) return null;
+    return { fret, from, to };
+  }
+
+  function chordDiagramSVG(shape) {
+    // Полоса над порожком нужна только под крестики заглушенных струн (гитара).
+    // Открытые струны ничем не отмечаем — только точки прижатия.
+    const marksTop = state.instrument === 'guitar';
+    const gap = 12, leftX = 11, rows = 4, rowH = 13.5;
+    const topY = marksTop ? 15 : 6;
+    const bottomY = topY + rowH * rows;
+    const vbH = bottomY + 6;
+    const stringsX = shape.map((_, i) => leftX + gap * i);
+    const lastX = stringsX[stringsX.length - 1];
+    const vbW = lastX + 17;
+    const fretted = shape.filter(f => f > 0);
+    const maxF = Math.max(...shape);
+    const base = (maxF > 4 && fretted.length) ? Math.min(...fretted) : 1;
+    let s = `<svg viewBox="0 0 ${vbW} ${vbH}" width="${Math.round(vbW * 0.76)}" height="${Math.round(vbH * 0.76)}" class="chord-svg" aria-hidden="true">`;
+    stringsX.forEach(x => { s += `<line x1="${x}" y1="${topY}" x2="${x}" y2="${bottomY}" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/>`; });
+    for (let r = 0; r <= rows; r++) {
+      const y = topY + rowH * r;
+      const isNut = r === 0 && base === 1;
+      s += `<line x1="${stringsX[0]}" y1="${y}" x2="${lastX}" y2="${y}" stroke="currentColor" stroke-width="${isNut ? 2.6 : 1}" stroke-opacity="${isNut ? 0.85 : 0.35}"/>`;
+    }
+    if (base > 1) s += `<text x="${lastX + 4}" y="${topY + rowH * 0.8}" font-size="8" fill="currentColor">${base}</text>`;
+
+    const barre = barreSpan(shape);
+    if (barre) {
+      const y = topY + rowH * (barre.fret - base + 0.5);
+      s += `<line x1="${stringsX[barre.from]}" y1="${y}" x2="${stringsX[barre.to]}" y2="${y}" stroke="currentColor" stroke-width="7.6" stroke-linecap="round"/>`;
+    }
+
+    shape.forEach((f, i) => {
+      const x = stringsX[i];
+      const markY = topY - 5;
+      if (f === -1) {
+        const d = 2.6;
+        s += `<line x1="${x - d}" y1="${markY - d}" x2="${x + d}" y2="${markY + d}" stroke="currentColor" stroke-width="1.4"/>`;
+        s += `<line x1="${x - d}" y1="${markY + d}" x2="${x + d}" y2="${markY - d}" stroke="currentColor" stroke-width="1.4"/>`;
+      } else if (f > 0) {
+        if (barre && f === barre.fret && i >= barre.from && i <= barre.to) return;
+        const row = f - base + 1;
+        if (row >= 1 && row <= rows) {
+          const y = topY + rowH * (row - 0.5);
+          s += `<circle cx="${x}" cy="${y}" r="3.8" fill="currentColor"/>`;
+        }
+      }
+    });
+    s += `</svg>`;
+    return s;
+  }
+
+  function pinIconSVG(active) {
+    return `<svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2a5 5 0 0 0-5 5c0 3.2 5 11.5 5 11.5s5-8.3 5-11.5a5 5 0 0 0-5-5z" fill="${active ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"/></svg>`;
+  }
+
+  function escapeHTML(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function parseBody(body) {
+    return body.split('\n').map(raw => {
+      if (raw.trim() === '') return { blank: true };
+      let lyric = '';
+      const chords = [];
+      let i = 0;
+      while (i < raw.length) {
+        if (raw[i] === '[') {
+          const end = raw.indexOf(']', i);
+          chords.push({ pos: lyric.length, chord: raw.slice(i + 1, end) });
+          i = end + 1;
+        } else {
+          lyric += raw[i];
+          i++;
+        }
+      }
+      return { lyric, chords };
+    });
+  }
+
+  function renderSheetHTML(parsedLines, semitones) {
+    let html = '';
+    for (const line of parsedLines) {
+      if (line.blank) { html += `<div class="line blank"></div>`; continue; }
+      let chordRow = '';
+      let len = 0;
+      for (const { pos, chord } of line.chords) {
+        const shown = transposeChord(chord, semitones);
+        if (pos > len) { chordRow += ' '.repeat(pos - len); len = pos; }
+        chordRow += `<span class="chord-tok">${escapeHTML(shown)}</span>`;
+        len += shown.length;
+      }
+      html += `<div class="line">`;
+      html += `<div class="chords">${chordRow || '&nbsp;'}</div>`;
+      html += `<div class="lyrics">${escapeHTML(line.lyric) || '&nbsp;'}</div>`;
+      html += `</div>`;
+    }
+    return html;
+  }
+
+  function collectUsedChords(parsedLines, semitones) {
+    const seen = new Set();
+    const list = [];
+    for (const line of parsedLines) {
+      if (line.blank) continue;
+      for (const { chord } of line.chords) {
+        const shown = transposeChord(chord, semitones);
+        if (!seen.has(shown)) { seen.add(shown); list.push(shown); }
+      }
+    }
+    return list;
+  }
+
+  const state = {
+    songId: null,
+    semitones: 0,
+    fontSize: 15,
+    fontSizeChosen: false,
+    variant: 0,
+    instrument: 'uke',
+    collapsedArtists: new Set(),
+    pinned: new Set(),
+    scroll: { active: false, speed: 0 }
+  };
+
+  try {
+    const savedFont = localStorage.getItem('uke_fontsize');
+    if (savedFont) { state.fontSize = parseInt(savedFont, 10); state.fontSizeChosen = true; }
+    const savedInst = localStorage.getItem('uke_instrument');
+    if (savedInst && SHAPES[savedInst]) state.instrument = savedInst;
+  } catch (e) {}
+
+  function currentSong() {
+    return SONGS.find(s => s.id === state.songId) || SONGS[0];
+  }
+
+  function saveFontSize() {
+    state.fontSizeChosen = true;
+    try { localStorage.setItem('uke_fontsize', String(state.fontSize)); } catch (e) {}
+  }
+
+  // На телефоне строки песни шире экрана: подбираем размер так, чтобы самая длинная
+  // строка поместилась. Работает только пока размер не выбран вручную.
+  function autoFitFontSize() {
+    if (state.fontSizeChosen) return;
+    const scroll = document.getElementById('chordsheet-scroll');
+    const sheet = scroll && scroll.querySelector('.chordsheet');
+    if (!sheet) return;
+    const available = scroll.clientWidth;
+    const needed = sheet.scrollWidth;
+    if (!available || !needed || needed <= available) return;
+    const fitted = Math.max(9, Math.floor(state.fontSize * available / needed));
+    if (fitted === state.fontSize) return;
+    state.fontSize = fitted;
+    renderSheet();
+  }
+
+  // px/секунду для уровней 0..10 (0 — стоп). Нижние уровни — темп игры (строка за 2-5 секунд),
+  // верхние — быстрая перемотка к нужному месту.
+  const SCROLL_SPEEDS = [0, 8, 12, 17, 23, 30, 40, 55, 80, 115, 160];
+
+  let rafId = null;
+  let lastTs = null;
+  let virtualTop = null;
+  function scrollStep(ts) {
+    if (!state.scroll.active) return;
+    const se = document.scrollingElement || document.documentElement;
+    if (virtualTop == null) virtualTop = se.scrollTop;
+    if (lastTs != null) {
+      const dt = (ts - lastTs) / 1000;
+      const maxTop = se.scrollHeight - se.clientHeight;
+      virtualTop += SCROLL_SPEEDS[state.scroll.speed] * dt;
+      if (virtualTop >= maxTop) {
+        se.scrollTop = maxTop;
+        stopScroll();
+        return;
+      }
+      se.scrollTop = virtualTop;
+    }
+    lastTs = ts;
+    rafId = requestAnimationFrame(scrollStep);
+  }
+  function startScroll() {
+    if (state.scroll.active) return;
+    state.scroll.active = true;
+    lastTs = null;
+    virtualTop = null;
+    rafId = requestAnimationFrame(scrollStep);
+    updateSpeedVal();
+  }
+  function stopScroll() {
+    state.scroll.active = false;
+    if (rafId) cancelAnimationFrame(rafId);
+    updateSpeedVal();
+  }
+  function updateSpeedVal() {
+    const el = document.getElementById('scroll-speed-val');
+    if (!el) return;
+    el.textContent = state.scroll.speed;
+    el.classList.toggle('active', state.scroll.active);
+  }
+  function changeSpeed(delta) {
+    state.scroll.speed = Math.max(0, Math.min(10, state.scroll.speed + delta));
+    if (state.scroll.speed === 0) stopScroll();
+    else startScroll();
+    updateSpeedVal();
+  }
+
+  document.getElementById('scroll-faster').addEventListener('click', () => changeSpeed(1));
+  document.getElementById('scroll-slower').addEventListener('click', () => changeSpeed(-1));
+
+  function openSong(id) {
+    state.songId = id;
+    state.variant = 0;
+    state.semitones = 0;
+    state.pinned = new Set();
+    state.scroll.speed = 0;
+    stopScroll();
+    location.hash = 'song=' + id;
+    renderAll();
+  }
+
+  function groupByArtist(songs) {
+    const groups = new Map();
+    for (const song of songs) {
+      const artist = song.artist || 'Без исполнителя';
+      if (!groups.has(artist)) groups.set(artist, []);
+      groups.get(artist).push(song);
+    }
+    return [...groups.entries()]
+      .sort((a, b) => a[0].localeCompare(b[0], 'ru'))
+      .map(([artist, list]) => [artist, list.sort((a, b) => a.title.localeCompare(b.title, 'ru'))]);
+  }
+
+  function renderSonglist() {
+    const nav = document.getElementById('songlist');
+    nav.querySelectorAll('.artist-group').forEach(el => el.remove());
+
+    for (const [artist, songs] of groupByArtist(SONGS)) {
+      const collapsed = state.collapsedArtists.has(artist);
+      const group = document.createElement('div');
+      group.className = 'artist-group' + (collapsed ? ' collapsed' : '');
+
+      const head = document.createElement('button');
+      head.type = 'button';
+      head.className = 'artist-head';
+      head.setAttribute('aria-expanded', String(!collapsed));
+      head.innerHTML = `<span class="chev">▾</span><span class="artist-name">${escapeHTML(artist)}</span><span class="artist-count">${songs.length}</span>`;
+      head.addEventListener('click', () => {
+        if (state.collapsedArtists.has(artist)) state.collapsedArtists.delete(artist);
+        else state.collapsedArtists.add(artist);
+        renderSonglist();
+      });
+      group.appendChild(head);
+
+      for (const song of songs) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'song-btn' + (song.id === state.songId ? ' active' : '');
+        btn.textContent = song.title;
+        btn.addEventListener('click', () => openSong(song.id));
+        group.appendChild(btn);
+      }
+
+      nav.appendChild(group);
+    }
+  }
+
+  function renderPinnedPanel() {
+    const panel = document.getElementById('pinned-panel');
+    const list = document.getElementById('pinned-list');
+    const chords = [...state.pinned];
+    if (chords.length === 0) { panel.hidden = true; return; }
+    panel.hidden = false;
+    list.innerHTML = chords.map(c => {
+      const shape = shapeFor(c);
+      return `<div class="pinned-item">
+        <button class="unpin-btn" data-chord="${escapeHTML(c)}" aria-label="Открепить ${escapeHTML(c)}">✕</button>
+        <span class="cc-name">${escapeHTML(c)}</span>
+        ${shape ? chordDiagramSVG(shape) : `<span class="cc-noshape">?</span>`}
+      </div>`;
+    }).join('');
+  }
+
+  function currentVariant() {
+    const song = currentSong();
+    return song.variants[Math.min(state.variant, song.variants.length - 1)];
+  }
+
+  function renderSheet() {
+    const song = currentSong();
+    const variant = currentVariant();
+    const parsed = parseBody(variant.body);
+    const displayKey = transposeChord(variant.key, state.semitones);
+    const usedChords = collectUsedChords(parsed, state.semitones);
+    const sheet = document.getElementById('sheet');
+    sheet.innerHTML = `
+      <div class="sheet-head">
+        <div>
+          <div class="song-title">${escapeHTML(song.title)}</div>
+          <div class="song-artist">${escapeHTML(song.artist)}</div>
+        </div>
+        <div class="controls">
+          <div class="ctrl-group" aria-label="Транспонирование">
+            <span class="label">Тон</span>
+            <button class="ctrl-btn" id="tr-down" aria-label="Ниже на полтона">–</button>
+            <span class="key-badge">${escapeHTML(displayKey)}</span>
+            <button class="ctrl-btn" id="tr-up" aria-label="Выше на полтона">+</button>
+          </div>
+          <div class="ctrl-group" aria-label="Размер шрифта">
+            <span class="label">A</span>
+            <button class="ctrl-btn" id="fs-down" aria-label="Меньше текст">–</button>
+            <span class="fontsize-val">${state.fontSize}</span>
+            <button class="ctrl-btn" id="fs-up" aria-label="Крупнее текст">+</button>
+          </div>
+          <div class="ctrl-group" id="inst-group" aria-label="Инструмент">
+            ${Object.entries(INSTRUMENTS).map(([id, name]) => `
+              <button type="button" class="inst-btn${state.instrument === id ? ' active' : ''}" data-inst="${id}" aria-pressed="${state.instrument === id}">${name}</button>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+      ${song.variants.length > 1 ? `
+        <div class="variant-bar" id="variant-bar" aria-label="Вариант аккордов">
+          <span class="variant-label">Вариант</span>
+          ${song.variants.map((v, i) => `
+            <button type="button" class="variant-btn${i === state.variant ? ' active' : ''}" data-variant="${i}" aria-pressed="${i === state.variant}">${escapeHTML(v.name || 'Вариант ' + (i + 1))}</button>
+          `).join('')}
+        </div>
+      ` : ''}
+      <div class="chord-gallery" id="chord-gallery">
+        ${usedChords.map(c => {
+          const shape = shapeFor(c);
+          const pinned = state.pinned.has(c);
+          return `<button type="button" class="chord-card${pinned ? ' pinned' : ''}" data-chord="${escapeHTML(c)}" aria-pressed="${pinned}" title="Закрепить ${escapeHTML(c)} на экране">
+            <span class="pin-ico">${pinIconSVG(pinned)}</span>
+            <span class="cc-name">${escapeHTML(c)}</span>
+            ${shape ? chordDiagramSVG(shape) : `<span class="cc-noshape">нет схемы</span>`}
+          </button>`;
+        }).join('')}
+      </div>
+      <div class="chordsheet-scroll" id="chordsheet-scroll">
+        <div class="chordsheet" style="font-size:${state.fontSize}px">${renderSheetHTML(parsed, state.semitones)}</div>
+      </div>
+    `;
+
+    document.getElementById('tr-down').addEventListener('click', () => { state.semitones--; state.pinned = new Set(); renderSheet(); });
+    document.getElementById('tr-up').addEventListener('click', () => { state.semitones++; state.pinned = new Set(); renderSheet(); });
+    document.getElementById('fs-down').addEventListener('click', () => { state.fontSize = Math.max(9, state.fontSize - 1); saveFontSize(); renderSheet(); });
+    document.getElementById('fs-up').addEventListener('click', () => { state.fontSize = Math.min(24, state.fontSize + 1); saveFontSize(); renderSheet(); });
+
+    const variantBar = document.getElementById('variant-bar');
+    if (variantBar) variantBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.variant-btn');
+      if (!btn) return;
+      const next = Number(btn.dataset.variant);
+      if (next === state.variant) return;
+      state.variant = next;
+      state.semitones = 0;
+      state.pinned = new Set();
+      renderSheet();
+    });
+
+    document.getElementById('inst-group').addEventListener('click', (e) => {
+      const btn = e.target.closest('.inst-btn');
+      if (!btn || btn.dataset.inst === state.instrument) return;
+      state.instrument = btn.dataset.inst;
+      try { localStorage.setItem('uke_instrument', state.instrument); } catch (err) {}
+      renderSheet();
+    });
+
+    document.getElementById('chord-gallery').addEventListener('click', (e) => {
+      const card = e.target.closest('.chord-card');
+      if (!card) return;
+      const chord = card.dataset.chord;
+      if (state.pinned.has(chord)) state.pinned.delete(chord); else state.pinned.add(chord);
+      renderSheet();
+    });
+
+    document.getElementById('chordsheet-scroll').addEventListener('click', () => {
+      if (state.scroll.active) { state.scroll.speed = 0; stopScroll(); }
+    });
+
+    renderPinnedPanel();
+    autoFitFontSize();
+  }
+
+  document.getElementById('pinned-list').addEventListener('click', (e) => {
+    const btn = e.target.closest('.unpin-btn');
+    if (!btn) return;
+    state.pinned.delete(btn.dataset.chord);
+    renderPinnedPanel();
+    const card = document.querySelector(`.chord-card[data-chord="${CSS.escape(btn.dataset.chord)}"]`);
+    if (card) { card.classList.remove('pinned'); card.setAttribute('aria-pressed', 'false'); card.querySelector('.pin-ico').innerHTML = pinIconSVG(false); }
+  });
+
+  function renderAll() {
+    renderSonglist();
+    renderSheet();
+  }
+
+  function initFromHash() {
+    const m = location.hash.match(/song=([\w-]+)/);
+    if (m && SONGS.some(s => s.id === m[1])) state.songId = m[1];
+  }
+
+  async function init() {
+    const sheet = document.getElementById('sheet');
+    try {
+      SONGS = await loadSongs();
+    } catch (e) {
+      sheet.innerHTML = `<div class="song-artist">Не удалось загрузить песни (${escapeHTML(e.message)}). Для локального просмотра запусти страницу через локальный сервер или собери данные: node build.mjs</div>`;
+      return;
+    }
+    if (!SONGS.length) {
+      sheet.innerHTML = '<div class="song-artist">Пока нет ни одной песни: добавь файл в songs/ и пересобери страницу (node build.mjs).</div>';
+      return;
+    }
+    state.songId = SONGS[0].id;
+    initFromHash();
+    renderAll();
+    updateSpeedVal();
+  }
+
+  window.addEventListener('hashchange', () => { initFromHash(); state.scroll.speed = 0; stopScroll(); renderAll(); updateSpeedVal(); });
+  init();
+</script>
