@@ -3,48 +3,75 @@
      а все мобильные правила ниже не включаются -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Укулельная тетрадь</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Russo+One&family=Oswald:wght@500;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Yeseva+One&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap');
+  /* Три оформления. Переключаются атрибутом data-skin на <html>, выбор помнится в браузере.
+     Всё остальное в стилях опирается только на эти переменные. */
 
-  :root {
-    --bg: #f1ead9;
-    --surface: #e9ddc5;
-    --surface-2: #ddcca6;
-    --border: #cab791;
-    --ink: #2b2013;
-    --ink-soft: #6d5c43;
-    --accent: #85601c;
-    --accent-strong: #5c3f10;
-    --accent-wash: rgba(133, 96, 28, 0.14);
-    --shadow: rgba(60, 44, 20, 0.16);
+  /* КАССЕТА — тёмный индиго, холодная бирюза */
+  :root, :root[data-skin="tape"] {
+    --bg: #0f1020;
+    --surface: #16182e;
+    --surface-2: #1d2039;
+    --border: #2f3358;
+    --ink: #dfe3f2;
+    --ink-soft: #7e85a8;
+    --accent: #4ee0d0;
+    --accent-strong: #7df0e3;
+    --accent-wash: rgba(78, 224, 208, 0.14);
+    --shadow: rgba(0, 0, 0, 0.6);
+    --font-display: 'Unbounded', system-ui, sans-serif;
+    --font-body: 'Golos Text', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --title-weight: 700;
+    --title-tt: none;
+    --title-ls: -0.02em;
+    --radius: 4px;
+    --radius-pill: 4px;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #1a130c;
-      --surface: #241a10;
-      --surface-2: #2f2314;
-      --border: #4a3a23;
-      --ink: #ece1cd;
-      --ink-soft: #b3a084;
-      --accent: #dcb75f;
-      --accent-strong: #ffd479;
-      --accent-wash: rgba(220, 183, 95, 0.16);
-      --shadow: rgba(0, 0, 0, 0.4);
-    }
+  /* ВИНИЛ — тёплый конверт, оранжевый и плотный гротеск */
+  :root[data-skin="vinyl"] {
+    --bg: #f2e6cf;
+    --surface: #fbf3e3;
+    --surface-2: #e6d4b4;
+    --border: #c9a97a;
+    --ink: #241708;
+    --ink-soft: #7c5c38;
+    --accent: #d1471a;
+    --accent-strong: #a83612;
+    --accent-wash: rgba(209, 71, 26, 0.12);
+    --shadow: rgba(80, 45, 15, 0.3);
+    --font-display: 'Russo One', system-ui, sans-serif;
+    --font-body: 'Golos Text', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --title-weight: 400;
+    --title-tt: none;
+    --title-ls: 0;
+    --radius: 8px;
+    --radius-pill: 999px;
   }
 
-  :root[data-theme="dark"] {
-    --bg: #1a130c;
-    --surface: #241a10;
-    --surface-2: #2f2314;
-    --border: #4a3a23;
-    --ink: #ece1cd;
-    --ink-soft: #b3a084;
-    --accent: #dcb75f;
-    --accent-strong: #ffd479;
-    --accent-wash: rgba(220, 183, 95, 0.16);
-    --shadow: rgba(0, 0, 0, 0.4);
+  /* КСЕРОКС — самиздат: бумага, жирный чёрный, красный как штамп */
+  :root[data-skin="xerox"] {
+    --bg: #f3f1ea;
+    --surface: #ffffff;
+    --surface-2: #e7e4da;
+    --border: #14130f;
+    --ink: #14130f;
+    --ink-soft: #6d6a60;
+    --accent: #d81e05;
+    --accent-strong: #a81704;
+    --accent-wash: rgba(216, 30, 5, 0.1);
+    --shadow: rgba(0, 0, 0, 0.25);
+    --font-display: 'Oswald', system-ui, sans-serif;
+    --font-body: 'Golos Text', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --title-weight: 700;
+    --title-tt: uppercase;
+    --title-ls: 0.02em;
+    --radius: 0px;
+    --radius-pill: 0px;
   }
 
   * { box-sizing: border-box; }
@@ -52,7 +79,7 @@
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: 'Golos Text', system-ui, sans-serif;
+    font-family: var(--font-body);
     padding: 0 20px;
     padding-block: 28px 64px;
   }
@@ -76,11 +103,42 @@
   }
 
   .site-title {
-    font-family: 'Yeseva One', serif;
-    font-size: clamp(28px, 4vw, 38px);
-    letter-spacing: 0.2px;
+    font-family: var(--font-display);
+    font-weight: var(--title-weight);
+    font-size: clamp(26px, 4vw, 36px);
+    letter-spacing: var(--title-ls);
+    text-transform: var(--title-tt);
+    line-height: 1.08;
     text-wrap: balance;
   }
+
+  .skins {
+    display: flex;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+
+  .skin-btn {
+    font-family: inherit;
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 5px 11px;
+    cursor: pointer;
+  }
+
+  .skin-btn:hover { color: var(--ink); border-color: var(--accent); }
+
+  .skin-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+  }
+
+  .skin-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .site-tagline {
     color: var(--ink-soft);
@@ -126,7 +184,7 @@
       width: 100%;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: var(--radius);
       padding: 11px 14px;
       font-family: inherit;
       font-size: 14.5px;
@@ -199,7 +257,7 @@
     color: var(--ink);
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     padding: 7px 12px;
     width: 100%;
   }
@@ -217,7 +275,7 @@
 
   .artist-group.flash {
     background: var(--accent-wash);
-    border-radius: 10px;
+    border-radius: var(--radius);
     box-shadow: 0 0 0 2px var(--accent);
   }
 
@@ -255,7 +313,7 @@
   }
 
   .artist-head:hover .artist-name { color: var(--accent-strong); }
-  .artist-head:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+  .artist-head:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: var(--radius); }
 
   .artist-head .chev {
     font-size: 10px;
@@ -274,7 +332,7 @@
   }
 
   .artist-count {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 11px;
     color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
@@ -284,7 +342,7 @@
     text-align: left;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius);
     padding: 9px 12px;
     margin-left: 14px;
     cursor: pointer;
@@ -308,7 +366,7 @@
   main.sheet {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: var(--radius);
     padding: 24px clamp(16px, 3vw, 32px) 32px;
     box-shadow: 0 8px 24px -12px var(--shadow);
   }
@@ -326,8 +384,12 @@
   }
 
   .song-title {
-    font-family: 'Yeseva One', serif;
-    font-size: clamp(22px, 3.4vw, 30px);
+    font-family: var(--font-display);
+    font-weight: var(--title-weight);
+    font-size: clamp(21px, 3.4vw, 29px);
+    letter-spacing: var(--title-ls);
+    text-transform: var(--title-tt);
+    line-height: 1.08;
     text-wrap: balance;
   }
 
@@ -362,7 +424,7 @@
     gap: 6px;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     padding: 4px 6px;
   }
 
@@ -405,7 +467,7 @@
     gap: 6px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 16px;
+    border-radius: var(--radius);
     padding: 8px 6px;
     box-shadow: 0 10px 24px -8px var(--shadow);
   }
@@ -429,7 +491,7 @@
   .scroll-arrow:active { background: var(--accent); color: var(--surface); }
 
   .scroll-speed-val {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 700;
     font-size: 13px;
     color: var(--accent-strong);
@@ -451,7 +513,7 @@
     font-family: inherit;
     font-size: 12.5px;
     padding: 3px 10px;
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     cursor: pointer;
   }
 
@@ -467,7 +529,7 @@
   .inst-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 
   .key-badge {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 700;
     color: var(--accent-strong);
     min-width: 2.4ch;
@@ -476,7 +538,7 @@
   }
 
   .fontsize-val {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-size: 12px;
     color: var(--ink-soft);
     min-width: 3ch;
@@ -502,7 +564,7 @@
   .variant-btn {
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-pill);
     padding: 5px 12px;
     font-family: inherit;
     font-size: 13px;
@@ -536,7 +598,7 @@
     gap: 3px;
     background: var(--bg);
     border: 1.5px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius);
     padding: 6px 6px 5px;
     cursor: pointer;
     color: var(--ink-soft);
@@ -552,7 +614,7 @@
   }
 
   .chord-card .cc-name {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 800;
     font-size: 15px;
     color: var(--ink);
@@ -587,7 +649,7 @@
     gap: 8px;
     background: var(--surface);
     border: 1px solid var(--accent);
-    border-radius: 12px;
+    border-radius: var(--radius);
     padding: 8px;
     box-shadow: 0 6px 18px -10px var(--shadow);
   }
@@ -622,7 +684,7 @@
     align-items: center;
     background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius);
     padding: 4px 4px 2px;
     color: var(--accent-strong);
   }
@@ -631,7 +693,7 @@
   .pinned-item .chord-svg { max-width: 100%; height: auto; }
 
   .pinned-item .cc-name {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     font-weight: 800;
     font-size: 13px;
   }
@@ -663,7 +725,7 @@
   }
 
   .chordsheet {
-    font-family: 'JetBrains Mono', monospace;
+    font-family: var(--font-mono);
     line-height: 1.55;
     white-space: pre;
     width: max-content;
@@ -702,6 +764,11 @@
     <div>
       <div class="site-title">Укулельная тетрадь</div>
       <div class="site-tagline">Аккорды, переснятые из тетради и скринов — набело, для игры на укулеле и гитаре.</div>
+    </div>
+    <div class="skins" id="skins" aria-label="Оформление">
+      <button type="button" class="skin-btn" data-skin="tape">Кассета</button>
+      <button type="button" class="skin-btn" data-skin="vinyl">Винил</button>
+      <button type="button" class="skin-btn" data-skin="xerox">Ксерокс</button>
     </div>
   </header>
 
@@ -814,7 +881,9 @@
       'Cm':[0,3,3,3], 'C#m':[1,4,4,4], 'Dm':[2,2,1,0], 'D#m':[3,3,2,1], 'Em':[0,4,3,2], 'Fm':[1,0,1,3],
       'F#m':[2,1,2,4], 'Gm':[0,2,3,1], 'G#m':[1,3,4,2], 'Am':[2,0,0,0], 'A#m':[3,1,1,1], 'Bm':[4,2,2,2],
       'C7':[0,0,0,1], 'C#7':[1,1,1,2], 'D7':[2,2,2,3], 'D#7':[3,3,3,4], 'E7':[1,2,0,2], 'F7':[2,3,1,3],
-      'F#7':[3,4,2,4], 'G7':[0,2,1,2], 'G#7':[1,3,2,3], 'A7':[0,1,0,0], 'A#7':[1,2,1,1], 'B7':[2,3,2,2]
+      'F#7':[3,4,2,4], 'G7':[0,2,1,2], 'G#7':[1,3,2,3], 'A7':[0,1,0,0], 'A#7':[1,2,1,1], 'B7':[2,3,2,2],
+      'Cm7':[3,3,3,3], 'C#m7':[4,4,4,4], 'Dm7':[2,2,1,3], 'D#m7':[3,3,2,4], 'Em7':[0,2,0,2], 'Fm7':[1,3,1,3],
+      'F#m7':[2,4,2,4], 'Gm7':[0,2,1,1], 'G#m7':[1,3,2,2], 'Am7':[0,0,0,0], 'A#m7':[1,1,1,1], 'Bm7':[2,2,2,2]
     },
     guitar: {
       'C':[-1,3,2,0,1,0], 'C#':[-1,4,3,1,2,1], 'D':[-1,-1,0,2,3,2], 'D#':[-1,-1,1,3,4,3],
@@ -825,7 +894,10 @@
       'G#m':[4,6,6,4,4,4], 'Am':[-1,0,2,2,1,0], 'A#m':[-1,1,3,3,2,1], 'Bm':[-1,2,4,4,3,2],
       'C7':[-1,3,2,3,1,0], 'C#7':[-1,4,3,4,2,1], 'D7':[-1,-1,0,2,1,2], 'D#7':[-1,-1,1,3,2,3],
       'E7':[0,2,0,1,0,0], 'F7':[1,3,1,2,1,1], 'F#7':[2,4,2,3,2,2], 'G7':[3,2,0,0,0,1],
-      'G#7':[4,6,4,5,4,4], 'A7':[-1,0,2,0,2,0], 'A#7':[-1,1,3,1,3,1], 'B7':[-1,2,1,2,0,2]
+      'G#7':[4,6,4,5,4,4], 'A7':[-1,0,2,0,2,0], 'A#7':[-1,1,3,1,3,1], 'B7':[-1,2,1,2,0,2],
+      'Cm7':[-1,3,5,3,4,3], 'C#m7':[-1,4,6,4,5,4], 'Dm7':[-1,-1,0,2,1,1], 'D#m7':[-1,-1,1,3,2,2],
+      'Em7':[0,2,0,0,0,0], 'Fm7':[1,3,1,1,1,1], 'F#m7':[2,4,2,2,2,2], 'Gm7':[3,5,3,3,3,3],
+      'G#m7':[4,6,4,4,4,4], 'Am7':[-1,0,2,0,1,0], 'A#m7':[-1,1,3,1,2,1], 'Bm7':[-1,2,4,2,3,2]
     }
   };
 
@@ -845,7 +917,7 @@
   }
 
   function shapeKeyFor(chord) {
-    const m = chord.match(/^([A-G])(#|b)?(m|7)?$/);
+    const m = chord.match(/^([A-G])(#|b)?(m7|m|7)?$/);
     if (!m) return null;
     const [, root, acc, qual] = m;
     let note = root + (acc || '');
@@ -999,11 +1071,13 @@
     scroll: { active: false, speed: 0 }
   };
 
+  let savedSkin = null;
   try {
     const savedFont = localStorage.getItem('uke_fontsize');
     if (savedFont) { state.fontSize = parseInt(savedFont, 10); state.fontSizeChosen = true; }
     const savedInst = localStorage.getItem('uke_instrument');
     if (savedInst && SHAPES[savedInst]) state.instrument = savedInst;
+    savedSkin = localStorage.getItem('uke_skin');
   } catch (e) {}
 
   function currentSong() {
@@ -1129,6 +1203,27 @@
     // панель выезжает с анимацией — прокручиваем к группе, когда она уже на месте
     isNarrow() ? setTimeout(show, 240) : show();
   }
+
+  // Оформление сайта: выбор пишется на <html> и запоминается в браузере
+  const SKINS = ['tape', 'vinyl', 'xerox'];
+
+  function applySkin(skin) {
+    if (!SKINS.includes(skin)) skin = SKINS[0];
+    document.documentElement.dataset.skin = skin;
+    document.querySelectorAll('.skin-btn').forEach(b => {
+      const on = b.dataset.skin === skin;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    try { localStorage.setItem('uke_skin', skin); } catch (e) {}
+  }
+
+  document.getElementById('skins').addEventListener('click', (e) => {
+    const btn = e.target.closest('.skin-btn');
+    if (btn) applySkin(btn.dataset.skin);
+  });
+
+  applySkin(savedSkin);
 
   // Выдвижной каталог — только на узком экране; на десктопе список всегда на виду
   function isNarrow() {
