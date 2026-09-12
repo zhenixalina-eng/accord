@@ -857,11 +857,16 @@
     const inline = Object.entries(SONG_FILES);
     if (inline.length) return inline.map(([fname, text]) => songFromFile(fname, text));
 
-    const idxRes = await fetch('songs/index.json');
+    // Хостинг разрешает браузеру держать эти файлы 10 минут, не спрашивая сервер,
+    // поэтому у того, кто заходил раньше, список песен оставался прежним.
+    // no-cache заставляет каждый раз сверяться: если файл не менялся, придёт лёгкий 304.
+    const fresh = { cache: 'no-cache' };
+
+    const idxRes = await fetch('songs/index.json', fresh);
     if (!idxRes.ok) throw new Error('songs/index.json: HTTP ' + idxRes.status);
     const files = await idxRes.json();
     return Promise.all(files.map(async fname => {
-      const res = await fetch('songs/' + fname);
+      const res = await fetch('songs/' + fname, fresh);
       if (!res.ok) throw new Error(fname + ': HTTP ' + res.status);
       return songFromFile(fname, await res.text());
     }));
