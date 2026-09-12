@@ -3,9 +3,9 @@
      а все мобильные правила ниже не включаются -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Укулельная тетрадь</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Russo+One&family=Oswald:wght@500;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Russo+One&family=Oswald:wght@500;700&family=PT+Sans+Narrow:wght@400;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap">
 <style>
-  /* Три оформления. Переключаются атрибутом data-skin на <html>, выбор помнится в браузере.
+  /* Четыре оформления. Переключаются атрибутом data-skin на <html>, выбор помнится в браузере.
      Всё остальное в стилях опирается только на эти переменные. */
 
   /* КАССЕТА — тёмный индиго, холодная бирюза */
@@ -72,6 +72,36 @@
     --title-ls: 0.02em;
     --radius: 0px;
     --radius-pill: 0px;
+  }
+
+  /* ГАЗЕТА — ни одного цвета: только чёрная краска и бумага */
+  :root[data-skin="paper"] {
+    --bg: #e8e6e1;
+    --surface: #f7f6f3;
+    --surface-2: #dcdad4;
+    --border: #141414;
+    --ink: #141414;
+    --ink-soft: #6a6a6a;
+    --accent: #141414;
+    --accent-strong: #141414;
+    --accent-wash: rgba(20, 20, 20, 0.09);
+    --shadow: rgba(0, 0, 0, 0.25);
+    --font-display: 'PT Sans Narrow', system-ui, sans-serif;
+    --font-body: 'Golos Text', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --title-weight: 700;
+    --title-tt: uppercase;
+    --title-ls: 0;
+    --radius: 0px;
+    --radius-pill: 0px;
+  }
+
+  /* Аккорды выворачиваются белым по чёрному, как выделение в печати.
+     Подложка рисуется тенью, а не padding — иначе сместится колонка над буквой. */
+  :root[data-skin="paper"] .chords .chord-tok {
+    background: var(--ink);
+    color: var(--bg);
+    box-shadow: 0 0 0 1.5px var(--ink);
   }
 
   * { box-sizing: border-box; }
@@ -769,6 +799,7 @@
       <button type="button" class="skin-btn" data-skin="tape">Кассета</button>
       <button type="button" class="skin-btn" data-skin="vinyl">Винил</button>
       <button type="button" class="skin-btn" data-skin="xerox">Ксерокс</button>
+      <button type="button" class="skin-btn" data-skin="paper">Газета</button>
     </div>
   </header>
 
@@ -1205,7 +1236,7 @@
   }
 
   // Оформление сайта: выбор пишется на <html> и запоминается в браузере
-  const SKINS = ['tape', 'vinyl', 'xerox'];
+  const SKINS = ['tape', 'vinyl', 'xerox', 'paper'];
 
   function applySkin(skin) {
     if (!SKINS.includes(skin)) skin = SKINS[0];
