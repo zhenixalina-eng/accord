@@ -108,8 +108,86 @@
     padding-right: 4px;
   }
 
+  /* На десктопе каталог — колонка слева; кнопка и подложка не нужны */
+  .catalog-btn, .catalog-backdrop, .catalog-close { display: none; }
+
+  .catalog-head h2 { margin: 0 0 2px 2px; }
+
+  /* На телефоне список исполнителей стеной закрывал бы песню,
+     поэтому каталог уезжает в выдвижную панель поверх страницы */
   @media (max-width: 760px) {
-    nav.songlist { position: static; max-height: 50vh; }
+    .catalog-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-family: inherit;
+      font-size: 14.5px;
+      font-weight: 600;
+      color: var(--ink);
+      cursor: pointer;
+    }
+
+    .catalog-btn-ico { font-size: 15px; color: var(--ink-soft); }
+
+    nav.songlist {
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      width: min(330px, 88vw);
+      max-height: none;
+      z-index: 80;
+      background: var(--bg);
+      border-right: 1px solid var(--border);
+      box-shadow: 0 0 40px -10px var(--shadow);
+      padding: 18px 14px;
+      overflow-y: auto;
+      transform: translateX(-101%);
+      transition: transform 0.22s ease;
+    }
+
+    nav.songlist.open { transform: none; }
+
+    .catalog-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      z-index: 70;
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .catalog-backdrop[hidden] { display: none; }
+
+    .catalog-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .catalog-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 13px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    nav.songlist { transition: none; }
   }
 
   .song-search {
@@ -627,8 +705,18 @@
   </header>
 
   <div class="layout">
+    <button type="button" class="catalog-btn" id="catalog-btn" aria-expanded="false">
+      <span class="catalog-btn-ico">☰</span>
+      <span id="catalog-btn-label">Каталог песен</span>
+    </button>
+
+    <div class="catalog-backdrop" id="catalog-backdrop" hidden></div>
+
     <nav class="songlist" id="songlist" aria-label="Список песен">
-      <h2>Песни</h2>
+      <div class="catalog-head">
+        <h2>Песни</h2>
+        <button type="button" class="catalog-close" id="catalog-close" aria-label="Закрыть каталог">✕</button>
+      </div>
       <input type="search" id="song-search" class="song-search" placeholder="Название или исполнитель" autocomplete="off" aria-label="Поиск песни">
       <div class="search-info" id="search-info" hidden></div>
     </nav>
@@ -1004,8 +1092,10 @@
     state.scroll.speed = 0;
     stopScroll();
     expandArtistOf(id);
+    setCatalog(false);
     location.hash = 'song=' + id;
     renderAll();
+    window.scrollTo({ top: 0 });
   }
 
   // Клик по исполнителю в песне — показать всё его в меню
@@ -1021,6 +1111,19 @@
     group.classList.add('flash');
     setTimeout(() => group.classList.remove('flash'), 1200);
   }
+
+  // Выдвижной каталог — только на узком экране; на десктопе список всегда на виду
+  function setCatalog(open) {
+    document.getElementById('songlist').classList.toggle('open', open);
+    document.getElementById('catalog-backdrop').hidden = !open;
+    document.getElementById('catalog-btn').setAttribute('aria-expanded', String(open));
+    if (open) document.getElementById('song-search').focus();
+  }
+
+  document.getElementById('catalog-btn').addEventListener('click', () => setCatalog(true));
+  document.getElementById('catalog-close').addEventListener('click', () => setCatalog(false));
+  document.getElementById('catalog-backdrop').addEventListener('click', () => setCatalog(false));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setCatalog(false); });
 
   document.getElementById('song-search').addEventListener('input', (e) => {
     state.query = e.target.value;
@@ -1085,6 +1188,9 @@
 
     const { list, searching } = matchingSongs();
     const groups = groupByArtist(list);
+
+    const btnLabel = document.getElementById('catalog-btn-label');
+    if (btnLabel) btnLabel.textContent = `Каталог — ${SONGS.length} ${plural(SONGS.length, 'песня', 'песни', 'песен')}`;
 
     if (searching) {
       info.hidden = false;
