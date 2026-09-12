@@ -375,6 +375,7 @@
   }
 
   .song-artist { color: var(--ink-soft); font-size: 14px; margin-top: 2px; }
+  .song-lyrics-by { color: var(--ink-soft); font-size: 13px; margin-top: 1px; }
 
   .artist-link {
     display: block;
@@ -806,7 +807,11 @@
       i++;
     }
 
-    const song = { title: meta.title || '', artist: meta.artist || '', key: meta.key || '' };
+    // lyrics — автор стихов, если он не тот же, кто исполняет (у Ночных Снайперов
+    // и Сургановой часть песен написана на чужие стихи). Отдельным полем, а не
+    // в artist: по artist песни группируются в списке.
+    const song = { title: meta.title || '', artist: meta.artist || '',
+                   lyrics: meta.lyrics || '', key: meta.key || '' };
     const variants = [];
     let current = null;
 
@@ -1401,6 +1406,7 @@
         <div>
           <div class="song-title">${escapeHTML(song.title)}</div>
           <button type="button" class="song-artist artist-link" id="song-artist-link" title="Показать все песни исполнителя">${escapeHTML(artistOf(song))}</button>
+          ${song.lyrics ? `<div class="song-lyrics-by">Стихи: ${escapeHTML(song.lyrics)}</div>` : ''}
         </div>
         <div class="controls">
           <div class="ctrl-group" aria-label="Транспонирование">
