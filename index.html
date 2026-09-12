@@ -725,6 +725,9 @@
     font-weight: 800;
   }
 
+  /* Позиция лада у аккорда — тоньше и бледнее, чтобы не сливалась с его именем */
+  .chord-pos { font-weight: 400; opacity: 0.72; }
+
 
   .lyrics { color: var(--ink); }
 
@@ -890,9 +893,28 @@
 
   const INSTRUMENTS = { uke: 'Укулеле', guitar: 'Гитара' };
 
+  // «Em(VII)» — аккорд Em, взятый у VII лада. Позицию держим отдельно от имени:
+  // по имени ищется схема, а позиция при транспонировании едет вместе с аккордом.
+  const FRETS = ['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
+
+  function splitChord(chord) {
+    const m = chord.match(/^(.*?)\((.+)\)$/);
+    return m ? { base: m[1], pos: m[2] } : { base: chord, pos: '' };
+  }
+
+  // Сдвинутая позиция может уйти за пределы грифа — тогда подпись убираем,
+  // чтобы не показывать лад, на котором эта аппликатура уже не берётся.
+  function shiftFret(pos, semitones) {
+    const i = FRETS.indexOf(pos);
+    return i === -1 ? pos : (FRETS[i + semitones] || '');
+  }
+
   function transposeChord(chord, semitones) {
-    if (!semitones) return chord;
-    const m = chord.match(/^([A-G])(#|b)?(.*)$/);
+    const { base, pos } = splitChord(chord);
+    const movedPos = semitones && pos ? shiftFret(pos, semitones) : pos;
+    const suffix = movedPos ? `(${movedPos})` : '';
+    if (!semitones) return base + suffix;
+    const m = base.match(/^([A-G])(#|b)?(.*)$/);
     if (!m) return chord;
     const [, root, acc, rest] = m;
     let note = root + (acc || '');
@@ -900,11 +922,11 @@
     const idx = NOTES.indexOf(note);
     if (idx === -1) return chord;
     const shifted = NOTES[(idx + semitones + 1200) % 12];
-    return shifted + rest;
+    return shifted + rest + suffix;
   }
 
   function shapeKeyFor(chord) {
-    const m = chord.match(/^([A-G])(#|b)?(m7|m6|dim|m|7)?$/);
+    const m = splitChord(chord).base.match(/^([A-G])(#|b)?(m7|m6|dim|m|7)?$/);
     if (!m) return null;
     const [, root, acc, qual] = m;
     let note = root + (acc || '');
@@ -1021,7 +1043,9 @@
       for (const { pos, chord } of line.chords) {
         const shown = transposeChord(chord, semitones);
         if (pos > len) { chordRow += ' '.repeat(pos - len); len = pos; }
-        chordRow += `<span class="chord-tok">${escapeHTML(shown)}</span>`;
+        const { base, pos: fret } = splitChord(shown);
+        chordRow += `<span class="chord-tok">${escapeHTML(base)}` +
+          (fret ? `<span class="chord-pos">(${escapeHTML(fret)})</span>` : '') + `</span>`;
         len += shown.length;
       }
       html += `<div class="line">`;
@@ -1038,7 +1062,7 @@
     for (const line of parsedLines) {
       if (line.blank) continue;
       for (const { chord } of line.chords) {
-        const shown = transposeChord(chord, semitones);
+        const shown = splitChord(transposeChord(chord, semitones)).base;
         if (!seen.has(shown)) { seen.add(shown); list.push(shown); }
       }
     }
