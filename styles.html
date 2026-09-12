@@ -1,29 +1,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Укулельная тетрадь — варианты оформления</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Russo+One&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Russo+One&family=Rubik:wght@500;800&family=Unbounded:wght@400;700&family=PT+Sans+Narrow:wght@700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700;800&display=swap">
 <style>
   * { box-sizing: border-box; }
   body { margin: 0; font-family: 'Golos Text', system-ui, sans-serif; background: #15151a; color: #f0efe9; }
   .intro { padding: 28px 20px 8px; max-width: 900px; margin: 0 auto; }
   .intro h1 { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 26px; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 6px; }
-  .intro p { margin: 0; color: #a3a29b; font-size: 14px; max-width: 60ch; }
+  .intro p { margin: 0; color: #a3a29b; font-size: 14px; max-width: 62ch; }
   .variant { padding: 22px 20px 40px; }
   .variant-label { max-width: 900px; margin: 0 auto 14px; display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .variant-num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #7c7b74; }
   .variant-title { font-family: 'Oswald', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; font-size: 17px; }
   .variant-note { font-size: 13px; color: #a3a29b; }
-  .mock { max-width: 900px; margin: 0 auto; border-radius: 2px; overflow: hidden; }
+  .mock { max-width: 900px; margin: 0 auto; overflow: hidden; }
 
-  /* общая структура макета — раскрашивается переменными каждого стиля */
   .m { background: var(--bg); color: var(--ink); padding: 22px; }
   .m-head { display: flex; flex-direction: column; gap: 12px; padding-bottom: 14px; border-bottom: var(--rule); margin-bottom: 16px; }
   .m-title { font-family: var(--display); font-weight: var(--display-w); font-size: var(--title-size); letter-spacing: var(--title-ls); text-transform: var(--title-tt); color: var(--title-color); line-height: 1.05; }
-  .m-artist { font-size: 13.5px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+  .m-artist { font-size: 13.5px; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; margin-top: 4px; }
   .m-controls { display: flex; gap: 8px; flex-wrap: wrap; }
   .pill { display: flex; align-items: center; gap: 6px; background: var(--pill-bg); border: var(--pill-border); border-radius: var(--pill-radius); padding: 4px 8px; font-size: 12px; color: var(--muted); }
   .pill b { font-family: 'JetBrains Mono', monospace; color: var(--accent); font-size: 12.5px; }
-  .pill .on { background: var(--accent); color: var(--bg); padding: 2px 8px; border-radius: var(--pill-radius); font-weight: 600; }
+  .pill .on { background: var(--accent); color: var(--on-ink); padding: 2px 8px; border-radius: var(--pill-radius); font-weight: 600; }
   .cards { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
   .card { background: var(--card-bg); border: var(--card-border); border-radius: var(--card-radius); padding: 6px; display: flex; flex-direction: column; align-items: center; gap: 3px; color: var(--diagram); }
   .card span { font-family: 'JetBrains Mono', monospace; font-weight: 800; font-size: 14px; color: var(--ink); }
@@ -31,32 +30,47 @@
   .ch { color: var(--accent); font-weight: 800; }
   .ly { color: var(--ink); }
 
-  /* 1 — панк-зин */
-  .punk {
-    --bg: #f3f1ea; --ink: #14130f; --muted: #6d6a60; --accent: #d81e05;
-    --display: 'Oswald', sans-serif; --display-w: 700; --title-size: 34px; --title-ls: 0.02em; --title-tt: uppercase; --title-color: #14130f;
-    --rule: 3px solid #14130f; --pill-bg: transparent; --pill-border: 2px solid #14130f; --pill-radius: 0;
-    --card-bg: #fff; --card-border: 2px solid #14130f; --card-radius: 0; --diagram: #14130f;
-  }
-  /* 2 — тёмная сцена */
-  .stage {
-    --bg: #121215; --ink: #e9e5dc; --muted: #8f8b81; --accent: #ffb545;
-    --display: 'Oswald', sans-serif; --display-w: 500; --title-size: 32px; --title-ls: 0.03em; --title-tt: uppercase; --title-color: #f6f2e8;
-    --rule: 1px solid #2c2c32; --pill-bg: #1c1c21; --pill-border: 1px solid #32323a; --pill-radius: 999px;
-    --card-bg: #1a1a1f; --card-border: 1px solid #32323a; --card-radius: 8px; --diagram: #cdc7ba;
-  }
-  /* 3 — винил 70-х */
-  .vinyl {
-    --bg: #f2e6cf; --ink: #241708; --muted: #7c5c38; --accent: #d1471a;
-    --display: 'Russo One', sans-serif; --display-w: 400; --title-size: 30px; --title-ls: 0; --title-tt: none; --title-color: #241708;
-    --rule: 2px solid #c9a97a; --pill-bg: #e6d4b4; --pill-border: 1px solid #c9a97a; --pill-radius: 999px;
-    --card-bg: #fbf3e3; --card-border: 1.5px solid #c9a97a; --card-radius: 6px; --diagram: #5c3a1a;
-  }
+  .punk { --bg:#f3f1ea; --ink:#14130f; --muted:#6d6a60; --accent:#d81e05; --on-ink:#fff;
+    --display:'Oswald',sans-serif; --display-w:700; --title-size:34px; --title-ls:0.02em; --title-tt:uppercase; --title-color:#14130f;
+    --rule:3px solid #14130f; --pill-bg:transparent; --pill-border:2px solid #14130f; --pill-radius:0;
+    --card-bg:#fff; --card-border:2px solid #14130f; --card-radius:0; --diagram:#14130f; }
+
+  .stage { --bg:#121215; --ink:#e9e5dc; --muted:#8f8b81; --accent:#ffb545; --on-ink:#121215;
+    --display:'Oswald',sans-serif; --display-w:500; --title-size:32px; --title-ls:0.03em; --title-tt:uppercase; --title-color:#f6f2e8;
+    --rule:1px solid #2c2c32; --pill-bg:#1c1c21; --pill-border:1px solid #32323a; --pill-radius:999px;
+    --card-bg:#1a1a1f; --card-border:1px solid #32323a; --card-radius:8px; --diagram:#cdc7ba; }
+
+  .vinyl { --bg:#f2e6cf; --ink:#241708; --muted:#7c5c38; --accent:#d1471a; --on-ink:#f2e6cf;
+    --display:'Russo One',sans-serif; --display-w:400; --title-size:30px; --title-ls:0; --title-tt:none; --title-color:#241708;
+    --rule:2px solid #c9a97a; --pill-bg:#e6d4b4; --pill-border:1px solid #c9a97a; --pill-radius:999px;
+    --card-bg:#fbf3e3; --card-border:1.5px solid #c9a97a; --card-radius:6px; --diagram:#5c3a1a; }
+
+  /* 04 — конструктивизм: плоскости, красный и чёрный, крупный геометрический шрифт */
+  .constr { --bg:#efece4; --ink:#111; --muted:#5f5c55; --accent:#e02b20; --on-ink:#fff;
+    --display:'Rubik',sans-serif; --display-w:800; --title-size:33px; --title-ls:-0.01em; --title-tt:uppercase; --title-color:#111;
+    --rule:6px solid #e02b20; --pill-bg:#111; --pill-border:0; --pill-radius:0;
+    --card-bg:#fff; --card-border:0; --card-radius:0; --diagram:#111; }
+  .constr .pill { color:#cdc9c0; }
+  .constr .card { box-shadow: 5px 5px 0 #e02b20; }
+
+  /* 05 — кассета: тёмный индиго, холодный неон */
+  .tape { --bg:#0f1020; --ink:#dfe3f2; --muted:#7e85a8; --accent:#4ee0d0; --on-ink:#0f1020;
+    --display:'Unbounded',sans-serif; --display-w:700; --title-size:26px; --title-ls:-0.02em; --title-tt:none; --title-color:#f2f3fb;
+    --rule:1px solid #2a2d4d; --pill-bg:#181a33; --pill-border:1px solid #2f3358; --pill-radius:4px;
+    --card-bg:#16182e; --card-border:1px solid #2f3358; --card-radius:4px; --diagram:#9aa2c8; }
+  .tape .m-title { text-shadow: 2px 0 0 #e0407a; }
+
+  /* 06 — газетный чёрно-белый: ни одного цвета, всё на контрасте и весе */
+  .paper { --bg:#e8e6e1; --ink:#141414; --muted:#6a6a6a; --accent:#141414; --on-ink:#e8e6e1;
+    --display:'PT Sans Narrow',sans-serif; --display-w:700; --title-size:38px; --title-ls:0; --title-tt:uppercase; --title-color:#141414;
+    --rule:1px solid #141414; --pill-bg:transparent; --pill-border:1px solid #141414; --pill-radius:0;
+    --card-bg:#f7f6f3; --card-border:1px solid #141414; --card-radius:0; --diagram:#141414; }
+  .paper .ch { background:#141414; color:#e8e6e1; padding:0 2px; }
 </style>
 
 <div class="intro">
-  <h1>Три варианта оформления</h1>
-  <p>Один и тот же кусок песни в трёх визуальных языках. Выбери номер — переделаю сайт целиком в этом ключе: шрифты, цвета, кнопки, каталог.</p>
+  <h1>Шесть вариантов оформления</h1>
+  <p>Один и тот же кусок песни, настоящие схемы аккордов из рабочего кода. Назови номер — переделаю сайт целиком в этом ключе: шрифты, цвета, кнопки, каталог. Можно и смешать: например, типографику одного с фоном другого.</p>
 </div>
 
 <div class="variant">
@@ -100,6 +114,63 @@
 <div class="variant">
   <div class="variant-label"><span class="variant-num">03</span><span class="variant-title">Винил 70-х</span><span class="variant-note">тёплая бумага конверта, оранжевый и плотный гротеск</span></div>
   <div class="mock"><div class="m vinyl">
+      <div class="m-head">
+        <div>
+          <div class="m-title">Всё идёт по плану</div>
+          <div class="m-artist">Коммунизм / Егор Летов</div>
+        </div>
+        <div class="m-controls">
+          <div class="pill">ТОН <b>Am</b></div>
+          <div class="pill">A <b>15</b></div>
+          <div class="pill"><span class="on">Укулеле</span> Гитара</div>
+        </div>
+      </div>
+      <div class="cards"><div class="card"><span>Am</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="27" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>F</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="27" r="3.8" fill="currentColor"/><circle cx="34" cy="13" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>C</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="48" cy="41" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>E</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="55" r="3.8" fill="currentColor"/><circle cx="20" cy="55" r="3.8" fill="currentColor"/><circle cx="34" cy="55" r="3.8" fill="currentColor"/><circle cx="48" cy="27" r="3.8" fill="currentColor"/></svg></div></div>
+      <div class="sheet"><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">Границы ключ переломлен пополам,</div><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">А наш батюшка Ленин совсем усоп.</div><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">Он разложился на плесень и на липовый мед,</div></div>
+    </div></div>
+</div>
+
+<div class="variant">
+  <div class="variant-label"><span class="variant-num">04</span><span class="variant-title">Конструктивизм</span><span class="variant-note">плоскости красного и чёрного, жирная геометрия, тени-сдвиги</span></div>
+  <div class="mock"><div class="m constr">
+      <div class="m-head">
+        <div>
+          <div class="m-title">Всё идёт по плану</div>
+          <div class="m-artist">Коммунизм / Егор Летов</div>
+        </div>
+        <div class="m-controls">
+          <div class="pill">ТОН <b>Am</b></div>
+          <div class="pill">A <b>15</b></div>
+          <div class="pill"><span class="on">Укулеле</span> Гитара</div>
+        </div>
+      </div>
+      <div class="cards"><div class="card"><span>Am</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="27" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>F</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="27" r="3.8" fill="currentColor"/><circle cx="34" cy="13" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>C</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="48" cy="41" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>E</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="55" r="3.8" fill="currentColor"/><circle cx="20" cy="55" r="3.8" fill="currentColor"/><circle cx="34" cy="55" r="3.8" fill="currentColor"/><circle cx="48" cy="27" r="3.8" fill="currentColor"/></svg></div></div>
+      <div class="sheet"><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">Границы ключ переломлен пополам,</div><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">А наш батюшка Ленин совсем усоп.</div><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">Он разложился на плесень и на липовый мед,</div></div>
+    </div></div>
+</div>
+
+<div class="variant">
+  <div class="variant-label"><span class="variant-num">05</span><span class="variant-title">Кассета 80-х</span><span class="variant-note">тёмный индиго, холодный неон, узкий современный шрифт</span></div>
+  <div class="mock"><div class="m tape">
+      <div class="m-head">
+        <div>
+          <div class="m-title">Всё идёт по плану</div>
+          <div class="m-artist">Коммунизм / Егор Летов</div>
+        </div>
+        <div class="m-controls">
+          <div class="pill">ТОН <b>Am</b></div>
+          <div class="pill">A <b>15</b></div>
+          <div class="pill"><span class="on">Укулеле</span> Гитара</div>
+        </div>
+      </div>
+      <div class="cards"><div class="card"><span>Am</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="27" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>F</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="27" r="3.8" fill="currentColor"/><circle cx="34" cy="13" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>C</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="48" cy="41" r="3.8" fill="currentColor"/></svg></div><div class="card"><span>E</span><svg viewBox="0 0 54 68" width="62" height="78" class="chord-svg" aria-hidden="true"><line x1="6" y1="6" x2="6" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="20" y1="6" x2="20" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="34" y1="6" x2="34" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="48" y1="6" x2="48" y2="62" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/><line x1="6" y1="6" x2="48" y2="6" stroke="currentColor" stroke-width="2.6" stroke-opacity="0.85"/><line x1="6" y1="20" x2="48" y2="20" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="34" x2="48" y2="34" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="48" x2="48" y2="48" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><line x1="6" y1="62" x2="48" y2="62" stroke="currentColor" stroke-width="1" stroke-opacity="0.35"/><circle cx="6" cy="55" r="3.8" fill="currentColor"/><circle cx="20" cy="55" r="3.8" fill="currentColor"/><circle cx="34" cy="55" r="3.8" fill="currentColor"/><circle cx="48" cy="27" r="3.8" fill="currentColor"/></svg></div></div>
+      <div class="sheet"><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">Границы ключ переломлен пополам,</div><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">А наш батюшка Ленин совсем усоп.</div><div>    <span class="ch">Am</span>    <span class="ch">F</span>       <span class="ch">C</span>          <span class="ch">E</span></div><div class="ly">Он разложился на плесень и на липовый мед,</div></div>
+    </div></div>
+</div>
+
+<div class="variant">
+  <div class="variant-label"><span class="variant-num">06</span><span class="variant-title">Газетный, без цвета</span><span class="variant-note">только чёрный и бумага: аккорды выворотка, как в печати</span></div>
+  <div class="mock"><div class="m paper">
       <div class="m-head">
         <div>
           <div class="m-title">Всё идёт по плану</div>
