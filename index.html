@@ -441,26 +441,21 @@
 
   .chord-svg { display: block; color: inherit; }
 
+  /* Полоса закреплённых аккордов: внутри карточки песни, над текстом, прилипает при прокрутке */
   .pinned-panel {
-    position: fixed;
-    right: 14px;
-    top: 14px;
-    z-index: 50;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px;
-    box-shadow: 0 10px 26px -8px var(--shadow);
-    max-height: 62vh;
-    overflow-y: auto;
-    width: min(150px, 38vw);
+    position: sticky;
+    top: 6px;
+    z-index: 20;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
+    background: var(--surface);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 8px 12px;
+    margin-bottom: 14px;
+    box-shadow: 0 6px 18px -10px var(--shadow);
   }
-
-  /* display:flex выше перебивает браузерное [hidden]{display:none} — возвращаем скрытие */
-  .pinned-panel[hidden] { display: none; }
 
   .pinned-panel .ph {
     font-size: 10.5px;
@@ -468,6 +463,14 @@
     letter-spacing: 0.06em;
     color: var(--ink-soft);
     font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .pinned-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: flex-start;
   }
 
   .pinned-item {
@@ -564,11 +567,6 @@
   </div>
 
   <footer class="note">Тапни по тексту песни, чтобы поставить автопрокрутку на паузу. Транспонирование сдвигает все аккорды песни.</footer>
-</div>
-
-<div class="pinned-panel" id="pinned-panel" hidden>
-  <div class="ph">Закреплено</div>
-  <div class="pinned-list" id="pinned-list"></div>
 </div>
 
 <div class="scrollctl" id="scrollctl">
@@ -985,20 +983,24 @@
     }
   }
 
-  function renderPinnedPanel() {
-    const panel = document.getElementById('pinned-panel');
-    const list = document.getElementById('pinned-list');
+  // Закреплённые аккорды живут внутри карточки песни, прямо над текстом, и «прилипают»
+  // к верху экрана при прокрутке — чтобы подглядывать, не уводя взгляд к краю страницы.
+  function pinnedPanelHTML() {
     const chords = [...state.pinned];
-    if (chords.length === 0) { panel.hidden = true; list.innerHTML = ''; return; }
-    panel.hidden = false;
-    list.innerHTML = chords.map(c => {
-      const shape = shapeFor(c);
-      return `<div class="pinned-item">
-        <button class="unpin-btn" data-chord="${escapeHTML(c)}" aria-label="Открепить ${escapeHTML(c)}">✕</button>
-        <span class="cc-name">${escapeHTML(c)}</span>
-        ${shape ? chordDiagramSVG(shape) : `<span class="cc-noshape">?</span>`}
-      </div>`;
-    }).join('');
+    if (!chords.length) return '';
+    return `<div class="pinned-panel" id="pinned-panel">
+      <span class="ph">Закреплено</span>
+      <div class="pinned-list" id="pinned-list">
+        ${chords.map(c => {
+          const shape = shapeFor(c);
+          return `<div class="pinned-item">
+            <button type="button" class="unpin-btn" data-chord="${escapeHTML(c)}" aria-label="Открепить ${escapeHTML(c)}">✕</button>
+            <span class="cc-name">${escapeHTML(c)}</span>
+            ${shape ? chordDiagramSVG(shape) : `<span class="cc-noshape">?</span>`}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
   }
 
   function currentVariant() {
@@ -1058,6 +1060,7 @@
           </button>`;
         }).join('')}
       </div>
+      ${pinnedPanelHTML()}
       <div class="chordsheet-scroll" id="chordsheet-scroll">
         <div class="chordsheet" style="font-size:${state.fontSize}px">${renderSheetHTML(parsed, state.semitones)}</div>
       </div>
@@ -1100,18 +1103,16 @@
       if (state.scroll.active) { state.scroll.speed = 0; stopScroll(); }
     });
 
-    renderPinnedPanel();
+    const pinnedList = document.getElementById('pinned-list');
+    if (pinnedList) pinnedList.addEventListener('click', (e) => {
+      const btn = e.target.closest('.unpin-btn');
+      if (!btn) return;
+      state.pinned.delete(btn.dataset.chord);
+      renderSheet();
+    });
+
     autoFitFontSize();
   }
-
-  document.getElementById('pinned-list').addEventListener('click', (e) => {
-    const btn = e.target.closest('.unpin-btn');
-    if (!btn) return;
-    state.pinned.delete(btn.dataset.chord);
-    renderPinnedPanel();
-    const card = document.querySelector(`.chord-card[data-chord="${CSS.escape(btn.dataset.chord)}"]`);
-    if (card) { card.classList.remove('pinned'); card.setAttribute('aria-pressed', 'false'); card.querySelector('.pin-ico').innerHTML = pinIconSVG(false); }
-  });
 
   function renderAll() {
     renderSonglist();
