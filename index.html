@@ -3,35 +3,13 @@
      а все мобильные правила ниже не включаются -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Укулельная тетрадь</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Russo+One&family=Oswald:wght@500;700&family=PT+Sans+Narrow:wght@400;700&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Russo+One&family=Oswald:wght@500&family=Golos+Text:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700;800&display=swap">
 <style>
-  /* Пять оформлений. Переключаются атрибутом data-skin на <html>, выбор помнится в браузере.
+  /* Два оформления. Переключаются атрибутом data-skin на <html>, выбор помнится в браузере.
      Всё остальное в стилях опирается только на эти переменные. */
 
-  /* КАССЕТА — тёмный индиго, холодная бирюза */
-  :root, :root[data-skin="tape"] {
-    --bg: #0f1020;
-    --surface: #16182e;
-    --surface-2: #1d2039;
-    --border: #2f3358;
-    --ink: #dfe3f2;
-    --ink-soft: #7e85a8;
-    --accent: #4ee0d0;
-    --accent-strong: #7df0e3;
-    --accent-wash: rgba(78, 224, 208, 0.14);
-    --shadow: rgba(0, 0, 0, 0.6);
-    --font-display: 'Unbounded', system-ui, sans-serif;
-    --font-body: 'Golos Text', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --title-weight: 700;
-    --title-tt: none;
-    --title-ls: -0.02em;
-    --radius: 4px;
-    --radius-pill: 4px;
-  }
-
   /* ВИНИЛ — тёплый конверт, оранжевый и плотный гротеск */
-  :root[data-skin="vinyl"] {
+  :root, :root[data-skin="vinyl"] {
     --bg: #f2e6cf;
     --surface: #fbf3e3;
     --surface-2: #e6d4b4;
@@ -52,29 +30,7 @@
     --radius-pill: 999px;
   }
 
-  /* КСЕРОКС — самиздат: бумага, жирный чёрный, красный как штамп */
-  :root[data-skin="xerox"] {
-    --bg: #f3f1ea;
-    --surface: #ffffff;
-    --surface-2: #e7e4da;
-    --border: #14130f;
-    --ink: #14130f;
-    --ink-soft: #6d6a60;
-    --accent: #d81e05;
-    --accent-strong: #a81704;
-    --accent-wash: rgba(216, 30, 5, 0.1);
-    --shadow: rgba(0, 0, 0, 0.25);
-    --font-display: 'Oswald', system-ui, sans-serif;
-    --font-body: 'Golos Text', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --title-weight: 700;
-    --title-tt: uppercase;
-    --title-ls: 0.02em;
-    --radius: 0px;
-    --radius-pill: 0px;
-  }
-
-  /* ТЁМНАЯ СЦЕНА — чёрный зал, тёплый свет, аккорды горят янтарным */
+  /* СЦЕНА — чёрный зал, тёплый свет, аккорды горят янтарным */
   :root[data-skin="stage"] {
     --bg: #121215;
     --surface: #1a1a1f;
@@ -94,36 +50,6 @@
     --title-ls: 0.03em;
     --radius: 8px;
     --radius-pill: 999px;
-  }
-
-  /* ГАЗЕТА — ни одного цвета: только чёрная краска и бумага */
-  :root[data-skin="paper"] {
-    --bg: #e8e6e1;
-    --surface: #f7f6f3;
-    --surface-2: #dcdad4;
-    --border: #141414;
-    --ink: #141414;
-    --ink-soft: #6a6a6a;
-    --accent: #141414;
-    --accent-strong: #141414;
-    --accent-wash: rgba(20, 20, 20, 0.09);
-    --shadow: rgba(0, 0, 0, 0.25);
-    --font-display: 'PT Sans Narrow', system-ui, sans-serif;
-    --font-body: 'Golos Text', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-    --title-weight: 700;
-    --title-tt: uppercase;
-    --title-ls: 0;
-    --radius: 0px;
-    --radius-pill: 0px;
-  }
-
-  /* Аккорды выворачиваются белым по чёрному, как выделение в печати.
-     Подложка рисуется тенью, а не padding — иначе сместится колонка над буквой. */
-  :root[data-skin="paper"] .chords .chord-tok {
-    background: var(--ink);
-    color: var(--bg);
-    box-shadow: 0 0 0 1.5px var(--ink);
   }
 
   * { box-sizing: border-box; }
@@ -818,11 +744,8 @@
       <div class="site-tagline">Аккорды, переснятые из тетради и скринов — набело, для игры на укулеле и гитаре.</div>
     </div>
     <div class="skins" id="skins" aria-label="Оформление">
-      <button type="button" class="skin-btn" data-skin="tape">Кассета</button>
       <button type="button" class="skin-btn" data-skin="vinyl">Винил</button>
-      <button type="button" class="skin-btn" data-skin="xerox">Ксерокс</button>
       <button type="button" class="skin-btn" data-skin="stage">Сцена</button>
-      <button type="button" class="skin-btn" data-skin="paper">Газета</button>
     </div>
   </header>
 
@@ -1259,7 +1182,7 @@
   }
 
   // Оформление сайта: выбор пишется на <html> и запоминается в браузере
-  const SKINS = ['tape', 'stage', 'vinyl', 'xerox', 'paper'];
+  const SKINS = ['vinyl', 'stage'];
 
   function applySkin(skin) {
     if (!SKINS.includes(skin)) skin = SKINS[0];
