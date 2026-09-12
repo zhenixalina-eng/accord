@@ -1098,26 +1098,37 @@
     window.scrollTo({ top: 0 });
   }
 
-  // Клик по исполнителю в песне — показать всё его в меню
+  // Клик по исполнителю в песне — показать всё его в меню.
+  // На телефоне меню спрятано в панель, поэтому её нужно открыть, иначе клик «никуда не ведёт».
   function revealArtist(artist) {
     state.query = '';
     const search = document.getElementById('song-search');
     if (search) search.value = '';
     state.expandedArtists.add(artist);
     renderSonglist();
-    const group = document.querySelector(`.artist-group[data-artist="${CSS.escape(artist)}"]`);
-    if (!group) return;
-    group.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    group.classList.add('flash');
-    setTimeout(() => group.classList.remove('flash'), 1200);
+    setCatalog(true, false);
+
+    const show = () => {
+      const group = document.querySelector(`.artist-group[data-artist="${CSS.escape(artist)}"]`);
+      if (!group) return;
+      group.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      group.classList.add('flash');
+      setTimeout(() => group.classList.remove('flash'), 1200);
+    };
+    // панель выезжает с анимацией — прокручиваем к группе, когда она уже на месте
+    isNarrow() ? setTimeout(show, 240) : show();
   }
 
   // Выдвижной каталог — только на узком экране; на десктопе список всегда на виду
-  function setCatalog(open) {
+  function isNarrow() {
+    return window.matchMedia('(max-width: 760px)').matches;
+  }
+
+  function setCatalog(open, focusSearch = true) {
     document.getElementById('songlist').classList.toggle('open', open);
     document.getElementById('catalog-backdrop').hidden = !open;
     document.getElementById('catalog-btn').setAttribute('aria-expanded', String(open));
-    if (open) document.getElementById('song-search').focus();
+    if (open && focusSearch && isNarrow()) document.getElementById('song-search').focus();
   }
 
   document.getElementById('catalog-btn').addEventListener('click', () => setCatalog(true));
