@@ -33,10 +33,25 @@ def vowel_to_column(line, n):
     return vp[min(n, len(vp)) - 1]
 
 
+def space_out(chords):
+    """Раздвигает аккорды, попавшие на смежные колонки, чтобы не слиплись в «EmC»."""
+    out = []
+    for col, name in sorted(chords):
+        if out:
+            prev_col, prev_name = out[-1]
+            col = max(col, prev_col + len(prev_name) + 1)
+        out.append((col, name))
+    return out
+
+
 def transfer(ref_line, ref_chords, target_line):
-    """ref_chords: [(колонка, 'Am'), ...] с размеченной строки -> то же для target_line."""
+    """ref_chords: [(колонка, 'Am'), ...] с размеченной строки -> то же для target_line.
+
+    Строки разной длины, поэтому после переноса аккорды могут оказаться вплотную —
+    раздвигаем их, иначе в строке аккордов будет нечитаемое «EmC».
+    """
     out = []
     for col, name in ref_chords:
         n = column_to_vowel(ref_line, col)
         out.append((vowel_to_column(target_line, n), name))
-    return out
+    return space_out(out)
