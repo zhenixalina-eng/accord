@@ -441,19 +441,27 @@
 
   .chord-svg { display: block; color: inherit; }
 
-  /* Полоса закреплённых аккордов: внутри карточки песни, над текстом, прилипает при прокрутке */
+  /* Текст песни и закреплённые аккорды рядом: аккорды — узкой колонкой справа,
+     прилипают при прокрутке, чтобы всегда были на уровне глаз рядом со строчками */
+  .sheet-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
   .pinned-panel {
     position: sticky;
-    top: 6px;
+    top: 10px;
     z-index: 20;
+    flex-shrink: 0;
+    width: 108px;
     display: flex;
-    align-items: center;
-    gap: 10px;
+    flex-direction: column;
+    gap: 8px;
     background: var(--surface);
     border: 1px solid var(--accent);
     border-radius: 12px;
-    padding: 8px 12px;
-    margin-bottom: 14px;
+    padding: 8px;
     box-shadow: 0 6px 18px -10px var(--shadow);
   }
 
@@ -463,14 +471,28 @@
     letter-spacing: 0.06em;
     color: var(--ink-soft);
     font-weight: 600;
-    flex-shrink: 0;
   }
 
   .pinned-list {
     display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 70vh;
+    overflow-y: auto;
+  }
+
+  /* На телефоне колонка сбоку съела бы ширину строк — там полоса сверху */
+  @media (max-width: 620px) {
+    .sheet-body { flex-direction: column-reverse; }
+    .pinned-panel {
+      width: auto;
+      align-self: stretch;
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .pinned-list { flex-direction: row; flex-wrap: wrap; max-height: none; overflow: visible; }
   }
 
   .pinned-item {
@@ -510,6 +532,8 @@
   }
 
   .chordsheet-scroll {
+    flex: 1;
+    min-width: 0;
     overflow-x: auto;
     padding-bottom: 4px;
     cursor: pointer;
@@ -1060,9 +1084,11 @@
           </button>`;
         }).join('')}
       </div>
-      ${pinnedPanelHTML()}
-      <div class="chordsheet-scroll" id="chordsheet-scroll">
-        <div class="chordsheet" style="font-size:${state.fontSize}px">${renderSheetHTML(parsed, state.semitones)}</div>
+      <div class="sheet-body">
+        <div class="chordsheet-scroll" id="chordsheet-scroll">
+          <div class="chordsheet" style="font-size:${state.fontSize}px">${renderSheetHTML(parsed, state.semitones)}</div>
+        </div>
+        ${pinnedPanelHTML()}
       </div>
     `;
 
