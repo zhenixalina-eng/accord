@@ -196,12 +196,13 @@
     box-shadow: 0 8px 24px -12px var(--shadow);
   }
 
+  /* Переключатели всегда своей строкой под заголовком: иначе они прыгали то вправо
+     от названия, то под него — в зависимости от длины названия песни */
   .sheet-head {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
-    flex-wrap: wrap;
+    gap: 14px;
     border-bottom: 1px dashed var(--border);
     padding-bottom: 16px;
     margin-bottom: 16px;
