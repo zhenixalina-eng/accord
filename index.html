@@ -724,7 +724,7 @@
     <main class="sheet" id="sheet"></main>
   </div>
 
-  <footer class="note">Тапни по тексту песни, чтобы поставить автопрокрутку на паузу. Транспонирование сдвигает все аккорды песни.</footer>
+  <footer class="note">Листать вручную можно не останавливая автопрокрутку — она продолжит с нового места. Тап по тексту ставит её на паузу.</footer>
 </div>
 
 <div class="scrollctl" id="scrollctl">
@@ -1037,10 +1037,18 @@
   let rafId = null;
   let lastTs = null;
   let virtualTop = null;
+  let appliedTop = null;
   function scrollStep(ts) {
     if (!state.scroll.active) return;
     const se = document.scrollingElement || document.documentElement;
     if (virtualTop == null) virtualTop = se.scrollTop;
+
+    // Если страницу прокрутили вручную (колесо, свайп, клавиши), позиция ушла от нашей —
+    // подхватываем её и едем дальше оттуда, а не дёргаем текст обратно.
+    if (appliedTop != null && Math.abs(se.scrollTop - appliedTop) > 2) {
+      virtualTop = se.scrollTop;
+    }
+
     if (lastTs != null) {
       const dt = (ts - lastTs) / 1000;
       const maxTop = se.scrollHeight - se.clientHeight;
@@ -1051,6 +1059,7 @@
         return;
       }
       se.scrollTop = virtualTop;
+      appliedTop = se.scrollTop;
     }
     lastTs = ts;
     rafId = requestAnimationFrame(scrollStep);
@@ -1060,6 +1069,7 @@
     state.scroll.active = true;
     lastTs = null;
     virtualTop = null;
+    appliedTop = null;
     rafId = requestAnimationFrame(scrollStep);
     updateSpeedVal();
   }
