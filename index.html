@@ -459,6 +459,9 @@
     gap: 8px;
   }
 
+  /* display:flex выше перебивает браузерное [hidden]{display:none} — возвращаем скрытие */
+  .pinned-panel[hidden] { display: none; }
+
   .pinned-panel .ph {
     font-size: 10.5px;
     text-transform: uppercase;
@@ -986,7 +989,7 @@
     const panel = document.getElementById('pinned-panel');
     const list = document.getElementById('pinned-list');
     const chords = [...state.pinned];
-    if (chords.length === 0) { panel.hidden = true; return; }
+    if (chords.length === 0) { panel.hidden = true; list.innerHTML = ''; return; }
     panel.hidden = false;
     list.innerHTML = chords.map(c => {
       const shape = shapeFor(c);
@@ -1138,6 +1141,15 @@
     updateSpeedVal();
   }
 
-  window.addEventListener('hashchange', () => { initFromHash(); state.scroll.speed = 0; stopScroll(); renderAll(); updateSpeedVal(); });
+  window.addEventListener('hashchange', () => {
+    initFromHash();
+    state.variant = 0;
+    state.semitones = 0;
+    state.pinned = new Set();
+    state.scroll.speed = 0;
+    stopScroll();
+    renderAll();
+    updateSpeedVal();
+  });
   init();
 </script>
