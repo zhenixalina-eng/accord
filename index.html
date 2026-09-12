@@ -90,10 +90,12 @@
     text-wrap: balance;
   }
 
+  /* Кнопки должны переноситься: нерастяжимый ряд делал страницу шире экрана,
+     и вся вёрстка уезжала вправо */
   .skins {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
-    flex-shrink: 0;
   }
 
   .skin-btn {
@@ -342,6 +344,7 @@
   }
 
   main.sheet {
+    min-width: 0;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -657,6 +660,8 @@
 
   .pinned-item {
     position: relative;
+    width: 100%;
+    min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
