@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/Evgeniya/dev/accord/tools/publish-songs.sh",
+            "timeout": 60,
+            "statusMessage": "Публикую песни на сайт"
+          }
+        ]
+      }
+    ]
+  }
+}
