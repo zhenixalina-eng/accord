@@ -28,7 +28,7 @@ from place_chords import place, strip_chords
 SONGS = Path(__file__).resolve().parent.parent / 'songs'
 
 # строки, которые не текст песни: подписи разделов, пометки в скобках, табулатура
-LABEL = re.compile(r'^(припев|проигрыш|вступление|кода|куплет|бридж|интро|аутро)\b.*:?\s*$', re.I)
+LABEL = re.compile(r'^(припев|проигрыш|вступление|кода|куплет|бридж|интро|аутро|соло|solo)\b.*:?\s*$', re.I)
 NOTE = re.compile(r'^\s*\(.*\)\s*$')
 TAB = re.compile(r'^[\s\-0-9|/\\hpbxv~*()]+$')
 META = re.compile(r'^(key|title|artist|lyrics|capo):', re.I)   # строка «key: Am» у варианта
