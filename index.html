@@ -734,6 +734,10 @@
 
   .lyrics { color: var(--ink); }
 
+  /* Пометки о том, как играть: «(По одному удару)». Это не текст песни,
+     поэтому приглушаем, чтобы не читались наравне со строчками. */
+  .lyrics.note { color: var(--ink-soft); }
+
   footer.note {
     margin-top: 22px;
     font-size: 12.5px;
@@ -1055,9 +1059,11 @@
           (fret ? `<span class="chord-pos">(${escapeHTML(fret)})</span>` : '') + `</span>`;
         len += shown.length;
       }
+      // Строка целиком в скобках и без аккордов — это ремарка, а не текст песни
+      const isNote = !line.chords.length && /^\s*\(.*\)\s*$/.test(line.lyric);
       html += `<div class="line">`;
       html += `<div class="chords">${chordRow || '&nbsp;'}</div>`;
-      html += `<div class="lyrics">${escapeHTML(line.lyric) || '&nbsp;'}</div>`;
+      html += `<div class="lyrics${isNote ? ' note' : ''}">${escapeHTML(line.lyric) || '&nbsp;'}</div>`;
       html += `</div>`;
     }
     return html;
