@@ -397,11 +397,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
+    gap: 3px;
     background: var(--bg);
     border: 1.5px solid var(--border);
     border-radius: 10px;
-    padding: 6px 10px 4px;
+    padding: 7px 7px 5px;
     cursor: pointer;
     color: var(--ink-soft);
     font-family: inherit;
@@ -418,7 +418,7 @@
   .chord-card .cc-name {
     font-family: 'JetBrains Mono', monospace;
     font-weight: 800;
-    font-size: 14px;
+    font-size: 15px;
     color: var(--ink);
   }
 
@@ -429,15 +429,6 @@
     color: var(--ink-soft);
     padding: 14px 4px;
   }
-
-  .chord-card .pin-ico {
-    position: absolute;
-    top: 3px;
-    right: 3px;
-    opacity: 0.55;
-  }
-
-  .chord-card.pinned .pin-ico { opacity: 1; }
 
   .chord-svg { display: block; color: inherit; }
 
@@ -752,11 +743,13 @@
     const vbH = bottomY + 6;
     const stringsX = shape.map((_, i) => leftX + gap * i);
     const lastX = stringsX[stringsX.length - 1];
-    const vbW = lastX + 17;
     const fretted = shape.filter(f => f > 0);
     const maxF = Math.max(...shape);
     const base = (maxF > 4 && fretted.length) ? Math.min(...fretted) : 1;
-    let s = `<svg viewBox="0 0 ${vbW} ${vbH}" width="${Math.round(vbW * 0.76)}" height="${Math.round(vbH * 0.76)}" class="chord-svg" aria-hidden="true">`;
+    // Место справа нужно только под номер лада — без него схема занимает всю карточку
+    const vbW = lastX + (base > 1 ? 15 : leftX);
+    const scale = 1.15;
+    let s = `<svg viewBox="0 0 ${vbW} ${vbH}" width="${Math.round(vbW * scale)}" height="${Math.round(vbH * scale)}" class="chord-svg" aria-hidden="true">`;
     stringsX.forEach(x => { s += `<line x1="${x}" y1="${topY}" x2="${x}" y2="${bottomY}" stroke="currentColor" stroke-width="1.3" stroke-opacity="0.5"/>`; });
     for (let r = 0; r <= rows; r++) {
       const y = topY + rowH * r;
@@ -789,10 +782,6 @@
     });
     s += `</svg>`;
     return s;
-  }
-
-  function pinIconSVG(active) {
-    return `<svg viewBox="0 0 24 24" width="12" height="12"><path d="M12 2a5 5 0 0 0-5 5c0 3.2 5 11.5 5 11.5s5-8.3 5-11.5a5 5 0 0 0-5-5z" fill="${active ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"/></svg>`;
   }
 
   function escapeHTML(s) {
@@ -1078,7 +1067,6 @@
           const shape = shapeFor(c);
           const pinned = state.pinned.has(c);
           return `<button type="button" class="chord-card${pinned ? ' pinned' : ''}" data-chord="${escapeHTML(c)}" aria-pressed="${pinned}" title="Закрепить ${escapeHTML(c)} на экране">
-            <span class="pin-ico">${pinIconSVG(pinned)}</span>
             <span class="cc-name">${escapeHTML(c)}</span>
             ${shape ? chordDiagramSVG(shape) : `<span class="cc-noshape">нет схемы</span>`}
           </button>`;
