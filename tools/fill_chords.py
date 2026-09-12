@@ -34,9 +34,14 @@ def vowel_to_column(line, n):
 
 
 def space_out(chords):
-    """Раздвигает аккорды, попавшие на смежные колонки, чтобы не слиплись в «EmC»."""
+    """Раздвигает аккорды, попавшие на смежные колонки, чтобы не слиплись в «EmC».
+
+    Порядок аккордов не трогаем: он задан исходной строкой. Сортировка здесь была
+    ошибкой — когда два аккорда попадали на одну колонку, она меняла их местами
+    по алфавиту, и «Cm Bm Bbm Am» превращалось в «Am Bbm Bm Cm».
+    """
     out = []
-    for col, name in sorted(chords):
+    for col, name in chords:
         if out:
             prev_col, prev_name = out[-1]
             col = max(col, prev_col + len(prev_name) + 1)
