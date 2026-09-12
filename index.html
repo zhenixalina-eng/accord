@@ -401,7 +401,7 @@
     background: var(--bg);
     border: 1.5px solid var(--border);
     border-radius: 10px;
-    padding: 7px 7px 5px;
+    padding: 6px 6px 5px;
     cursor: pointer;
     color: var(--ink-soft);
     font-family: inherit;
@@ -737,7 +737,8 @@
     // Полоса над порожком нужна только под крестики заглушенных струн (гитара).
     // Открытые струны ничем не отмечаем — только точки прижатия.
     const marksTop = state.instrument === 'guitar';
-    const gap = 12, leftX = 11, rows = 4, rowH = 13.5;
+    // leftX — поле от края до крайней струны: только чтобы точка не срезалась
+    const gap = 14, leftX = 6, rows = 4, rowH = 14;
     const topY = marksTop ? 15 : 6;
     const bottomY = topY + rowH * rows;
     const vbH = bottomY + 6;
