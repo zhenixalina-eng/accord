@@ -636,11 +636,12 @@
   }
 
   .pinned-panel .ph {
-    font-size: 10.5px;
+    font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.02em;
     color: var(--ink-soft);
     font-weight: 600;
+    text-align: center;
   }
 
   .pinned-list {
@@ -654,7 +655,8 @@
   /* На телефоне колонка остаётся справа, только уже — чтобы строкам хватало места */
   @media (max-width: 620px) {
     .sheet-body { gap: 10px; }
-    .pinned-panel { width: 84px; padding: 6px; }
+    .pinned-panel { width: 88px; padding: 6px; }
+    .pinned-panel .ph { font-size: 9px; letter-spacing: 0; }
     .pinned-list { gap: 8px; max-height: 60vh; }
   }
 
