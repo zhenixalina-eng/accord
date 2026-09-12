@@ -438,8 +438,10 @@
 
   .scroll-speed-val.active { color: var(--accent); }
 
-  @media (max-width: 500px) {
-    .scrollctl { top: auto; bottom: 14px; right: auto; left: 10px; transform: none; }
+  /* На телефоне — тоже справа, но внизу: там её достаёт большой палец,
+     и она не перекрывает колонку закреплённых аккордов у верхнего края */
+  @media (max-width: 620px) {
+    .scrollctl { top: auto; bottom: 16px; right: 10px; transform: none; }
   }
 
   .inst-btn {
@@ -606,18 +608,11 @@
     overflow-y: auto;
   }
 
-  /* На телефоне колонка сбоку съела бы ширину строк — там полоса сверху */
+  /* На телефоне колонка остаётся справа, только уже — чтобы строкам хватало места */
   @media (max-width: 620px) {
-    .sheet-body { flex-direction: column-reverse; }
-    .pinned-panel {
-      width: auto;
-      align-self: stretch;
-      flex-direction: row;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-    .pinned-list { flex-direction: row; flex-wrap: wrap; max-height: none; overflow: visible; }
+    .sheet-body { gap: 10px; }
+    .pinned-panel { width: 84px; padding: 6px; }
+    .pinned-list { gap: 8px; max-height: 60vh; }
   }
 
   .pinned-item {
@@ -631,6 +626,9 @@
     padding: 4px 4px 2px;
     color: var(--accent-strong);
   }
+
+  /* Гитарная схема шире укулельной — в узкой колонке ужимаем по месту */
+  .pinned-item .chord-svg { max-width: 100%; height: auto; }
 
   .pinned-item .cc-name {
     font-family: 'JetBrains Mono', monospace;
