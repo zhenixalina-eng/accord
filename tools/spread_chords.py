@@ -33,6 +33,7 @@ NOTE = re.compile(r'^\s*\(.*\)\s*$')
 TAB = re.compile(r'^[\s\-0-9|/\\hpbxv~*()]+$')
 META = re.compile(r'^(key|title|artist|lyrics|capo):', re.I)   # строка «key: Am» у варианта
 SHORT = 12          # строку короче этого не нагружаем целым кругом
+MIN_GAP = 5         # ближе этого аккорды ставить не стоит — читается как каша
 
 
 def parse(raw):
@@ -65,53 +66,88 @@ def word_starts(text):
     return starts
 
 
+def pick(chords, k):
+    """k аккордов из круга — равномерно, но первый и последний обязательно.
+
+    Короткая строка поётся быстрее, и весь круг на неё не ложится: аккорды
+    встают вплотную и читаются как каша. Поэтому берём из круга столько,
+    сколько строка вмещает по своей длине.
+    """
+    if k >= len(chords):
+        return chords
+    if k <= 1:
+        return chords[:1]
+    idx = sorted({round(i * (len(chords) - 1) / (k - 1)) for i in range(k)})
+    return [chords[i] for i in idx]
+
+
 def spread(ref_lyric, ref_chords, text):
     """Круг опорной строки, разнесённый по длине новой строки."""
     n = len(ref_lyric.rstrip()) or 1
+    body = len(text.rstrip())
+    chords = pick(ref_chords, max(1, round(body / n * len(ref_chords))))
     starts = word_starts(text)
     out, floor = [], -1
-    for col, name in ref_chords:
-        want = col / n * len(text)
-        if want >= len(text) - 1:                 # замыкающий — в конец строки
-            place_at = max(len(text), floor + 1)
+    for col, name in chords:
+        want = col / n * body
+        if want >= body - 1:                      # замыкающий — в конец строки
+            place_at = max(body, floor + 1)
         else:
-            free = [s for s in starts if s > floor]
-            place_at = min(free, key=lambda s: abs(s - want)) if free else max(len(text), floor + 1)
+            free = [s for s in starts if s >= floor]
+            place_at = min(free, key=lambda s: abs(s - want)) if free else max(body, floor + 1)
         out.append((place_at, name))
-        floor = place_at + len(name)
+        floor = place_at + max(len(name) + 1, MIN_GAP)
     return out
 
 
 def fill(lines):
-    """Достраивает аккорды в строках, где их нет. Возвращает (строки, что изменилось)."""
-    out, refs, changes = [], [], []
+    """Достраивает аккорды в строках, где их нет. Возвращает (строки, что изменилось).
+
+    Опорные — только строки с аккордами из источника, и отдельно для куплета
+    и для припева: у припева своя гармония, и достраивать по нему куплет нельзя.
+    Достроенные строки опорными не становятся — иначе на каждой следующей круг
+    усыхал бы, и к концу куплета от него остался бы один аккорд.
+    """
+    out, refs, changes, gap, section = [], {}, [], 0, ''
+    last = ''
     for raw in lines:
         if raw.startswith('---'):                 # новый вариант — свои опорные строки
-            refs = []
+            refs, gap, section = {}, 0, ''
+            out.append(raw)
+            continue
+        if not raw.strip():                       # пустая строка — новый блок
+            gap, section = 0, ''
             out.append(raw)
             continue
         lyric, chords = parse(raw)
+        s = lyric.strip()
+        if LABEL.match(s):                        # «Припев:» и прочие подписи
+            section = s.split(':')[0].strip().lower()
+            gap = 0
+            out.append(raw)
+            continue
         if not is_lyric(lyric):
             out.append(raw)
             continue
         if chords:
-            refs.append((lyric, chords))
-            refs = refs[-2:]
+            refs[section] = (refs.get(section, []) + [(lyric, chords)])[-2:]
+            last = section
+            gap = 0
             out.append(raw)
             continue
-        if not refs:                              # опереться не на что — не трогаем
+        here = refs.get(section) or refs.get(last)
+        if not here:                              # опереться не на что — не трогаем
             out.append(raw)
             continue
-        ref = refs[0] if len(refs) == 2 else refs[0]
-        ref_lyric, ref_chords = ref
-        if len(lyric.strip()) < SHORT:            # короткая строка — только первый аккорд
-            ref_chords = ref_chords[:1]
+        # две опорные строки чередуются: первая строка куплета, вторая, первая...
+        ref_lyric, ref_chords = here[gap % len(here)]
+        if len(s) < SHORT:                        # короткая строка — только первый аккорд
             new = [(0, ref_chords[0][1])]
         else:
             new = spread(ref_lyric, ref_chords, lyric)
         out.append(place(lyric, new))
-        refs = [refs[-1], (lyric, new)] if len(refs) == 2 else [(lyric, new)]
         changes.append(out[-1])
+        gap += 1
     return out, changes
 
 
