@@ -2,7 +2,7 @@
 screens/
 
 # Сборка для артефакта (генерируется из index.html + songs/)
-site/app.html
+site/
 
 __pycache__/
 .DS_Store

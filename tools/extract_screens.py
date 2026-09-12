@@ -12,7 +12,16 @@ OUT = PROJECT / 'screens'
 
 
 def images_in(node):
+    """Картинки из сообщения, кроме тех, что внутри результатов инструментов.
+
+    В результатах лежат мои же рендеры сайта. При этом сообщение, присланное
+    посреди хода, может оказаться в одной записи с результатом инструмента —
+    поэтому отбрасываем не всю запись, а только ветку tool_result.
+    """
     if isinstance(node, dict):
+        if node.get('type') == 'tool_result':
+            return
+        node = {k: v for k, v in node.items() if k != 'toolUseResult'}
         if node.get('type') == 'image':
             src = node.get('source') or {}
             if src.get('type') == 'base64' and src.get('data'):
@@ -40,17 +49,9 @@ def main():
                 rec = json.loads(line)
             except json.JSONDecodeError:
                 continue
-            msg = rec.get('message') or {}
-            if msg.get('role') != 'user':
-                continue
-            # Результаты инструментов приходят с той же ролью «user» — в них лежат
-            # картинки, которые я сам же и отрендерил. Нужны только присланные в чат.
-            content = msg.get('content')
-            if isinstance(content, list) and any(
-                isinstance(b, dict) and b.get('type') == 'tool_result' for b in content
-            ):
-                continue
-            for media_type, data in images_in(msg):
+            # Смотрим всю запись целиком: картинки из сообщений, присланных
+            # посреди хода, лежат не в message, а в поле attachment.
+            for media_type, data in images_in(rec):
                 raw = base64.b64decode(data)
                 digest = hashlib.sha1(raw).hexdigest()[:10]
                 if digest in seen:

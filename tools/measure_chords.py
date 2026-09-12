@@ -5,6 +5,7 @@
 способами: по цвету (если аккорды выделены цветом) и по плотности — в строке
 аккордов закрашено гораздо меньше, чем в строке текста.
 """
+import math
 import sys
 from collections import Counter
 from pathlib import Path
@@ -91,8 +92,19 @@ def band_tint(im, band, is_ink):
     return (rs / n, gs / n, bs / n) if n else (0, 0, 0)
 
 
+def all_glyph_lefts(im, bands, is_ink):
+    xs = []
+    for band in bands:
+        xs += [a for a, _ in clusters_from(ink_columns(im, band, is_ink), min_gap=2)]
+    return xs
+
+
 def estimate_cell(im, bands, is_ink):
-    """Ширина знакоместа — самое частое расстояние между соседними глифами."""
+    """Ширина знакоместа — дробная, иначе на длинных строках копится сдвиг.
+
+    Сначала берём самый частый шаг между соседними глифами, потом уточняем:
+    у верной ширины все глифы попадают близко к целым номерам колонок.
+    """
     deltas = Counter()
     for band in bands:
         cl = clusters_from(ink_columns(im, band, is_ink), min_gap=2)
@@ -102,7 +114,25 @@ def estimate_cell(im, bands, is_ink):
                 deltas[d] += 1
     if not deltas:
         sys.exit('не удалось оценить ширину знакоместа')
-    return deltas.most_common(1)[0][0]
+    rough = deltas.most_common(1)[0][0]
+
+    xs = all_glyph_lefts(im, bands, is_ink)
+    best, best_score = rough, -1
+    step = 0.01
+    c = rough - 1.5
+    while c <= rough + 1.5:
+        if c > 1:
+            # насколько дружно доли колонок жмутся к нулю
+            re = im_ = 0.0
+            for x in xs:
+                ph = ((x - xs[0]) / c % 1) * 2 * math.pi
+                re += math.cos(ph)
+                im_ += math.sin(ph)
+            score = (re * re + im_ * im_) ** 0.5 / len(xs)
+            if score > best_score:
+                best, best_score = c, score
+        c += step
+    return best
 
 
 def split_two(values):
@@ -151,7 +181,7 @@ def main(path):
     for band, chord in zip(bands, is_chord):
         if chord:
             continue
-        cl = clusters_from(ink_columns(im, band, is_ink), min_gap=max(3, cell // 2))
+        cl = clusters_from(ink_columns(im, band, is_ink), min_gap=max(3, int(cell // 2)))
         if cl:
             lefts.append(cl[0][0])
     if not lefts:
@@ -159,10 +189,10 @@ def main(path):
     x0 = min(lefts)
 
     fon = 'тёмный' if background(im) < 128 else 'светлый'
-    print(f'{Path(path).name}: {im.size[0]}x{im.size[1]}, фон {fon}, знакоместо={cell}px, левый край={x0}px')
+    print(f'{Path(path).name}: {im.size[0]}x{im.size[1]}, фон {fon}, знакоместо={cell:.2f}px, левый край={x0}px')
     print()
     for band, chord in zip(bands, is_chord):
-        cl = clusters_from(ink_columns(im, band, is_ink), min_gap=max(3, cell // 2))
+        cl = clusters_from(ink_columns(im, band, is_ink), min_gap=max(3, int(cell // 2)))
         cols = [round((a - x0) / cell) for a, _ in cl]
         kind = 'аккорды' if chord else '  текст'
         print(f'{kind} y={band[0]:4d}: {cols}')

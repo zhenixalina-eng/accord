@@ -13,15 +13,16 @@ def vowel_positions(line):
 
 
 def column_to_vowel(line, col):
-    """Номер слога (с 1), на который попадает аккорд в колонке col."""
+    """Номер слога (с 1), на который попадает аккорд в колонке col.
+
+    Берём ближайшую гласную в обе стороны: аккорд, подписанный над серединой
+    слова, относится к его слогу, а не к началу следующего слова.
+    """
     vp = vowel_positions(line)
     if not vp:
         return 1
-    # ближайшая гласная, начиная с этой колонки; если аккорд левее первой — слог 1
-    for n, pos in enumerate(vp, start=1):
-        if pos >= col:
-            return n
-    return len(vp)
+    best = min(range(len(vp)), key=lambda i: (abs(vp[i] - col), i))
+    return best + 1
 
 
 def vowel_to_column(line, n):
