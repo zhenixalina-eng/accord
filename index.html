@@ -137,6 +137,53 @@
     .layout { grid-template-columns: 1fr; }
   }
 
+  /* Меню из двух шагов: сначала исполнитель, под ним — его песни */
+  .picker {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    min-width: 0;
+  }
+
+  .picker-row {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+
+  .picker-label {
+    font-size: 12px;
+    color: var(--ink-soft);
+    padding-left: 2px;
+  }
+
+  .picker-select {
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 8px 10px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .picker-select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+
+  /* На десктопе меню стоит над песней, а список слева тянется на обе строки */
+  @media (min-width: 761px) {
+    .picker { grid-column: 2; grid-row: 1; flex-direction: row; gap: 14px; }
+    .picker-row { flex: 1; }
+    nav.songlist { grid-column: 1; grid-row: 1 / span 2; }
+    main.sheet { grid-column: 2; grid-row: 2; }
+  }
+
   /* Песен может быть много, поэтому меню прокручивается само, не утягивая страницу */
   nav.songlist {
     display: flex;
@@ -767,6 +814,17 @@
   </header>
 
   <div class="layout">
+    <div class="picker" id="picker">
+      <label class="picker-row">
+        <span class="picker-label">Исполнитель</span>
+        <select id="pick-artist" class="picker-select"></select>
+      </label>
+      <label class="picker-row">
+        <span class="picker-label">Песня</span>
+        <select id="pick-song" class="picker-select"></select>
+      </label>
+    </div>
+
     <button type="button" class="catalog-btn" id="catalog-btn" aria-expanded="false">
       <span class="catalog-btn-ico">☰</span>
       <span id="catalog-btn-label">Каталог песен</span>
@@ -1096,6 +1154,7 @@
     instrument: 'uke',
     query: '',
     expandedArtists: new Set(),
+    pickerArtist: null,   // исполнитель, выбранный в меню, пока песню из него ещё не открыли
     pinned: new Set(),
     scroll: { active: false, speed: 0 }
   };
@@ -1200,6 +1259,7 @@
 
   function openSong(id) {
     state.songId = id;
+    state.pickerArtist = null;
     state.variant = 0;
     state.semitones = 0;
     state.pinned = new Set();
@@ -1515,8 +1575,43 @@
     autoFitFontSize();
   }
 
+  // Меню «исполнитель → песня». Пока в нём выбран другой исполнитель, чем у открытой
+  // песни, в списке песен стоит подсказка — песня открывается только по выбору.
+  function renderPicker() {
+    const artistSel = document.getElementById('pick-artist');
+    const songSel = document.getElementById('pick-song');
+    if (!artistSel || !songSel) return;
+    const groups = groupByArtist([...SONGS]);
+    const current = currentSong();
+    const artist = state.pickerArtist || (current ? artistOf(current) : groups[0][0]);
+
+    artistSel.innerHTML = groups.map(([a, list]) =>
+      `<option value="${escapeHTML(a)}"${a === artist ? ' selected' : ''}>${escapeHTML(a)} (${list.length})</option>`
+    ).join('');
+
+    const songs = (groups.find(([a]) => a === artist) || [null, []])[1];
+    const hasCurrent = current && songs.some(s => s.id === current.id);
+    songSel.innerHTML = (hasCurrent ? '' : '<option value="" selected disabled>Выбери песню…</option>') +
+      songs.map(s =>
+        `<option value="${escapeHTML(s.id)}"${hasCurrent && s.id === current.id ? ' selected' : ''}>${escapeHTML(s.title)}</option>`
+      ).join('');
+  }
+
+  document.getElementById('pick-artist').addEventListener('change', (e) => {
+    state.pickerArtist = e.target.value;
+    renderPicker();
+    document.getElementById('pick-song').focus();
+  });
+
+  document.getElementById('pick-song').addEventListener('change', (e) => {
+    if (!e.target.value) return;
+    state.pickerArtist = null;
+    openSong(e.target.value);
+  });
+
   function renderAll() {
     renderSonglist();
+    renderPicker();
     renderSheet();
   }
 
@@ -1546,6 +1641,7 @@
 
   window.addEventListener('hashchange', () => {
     initFromHash();
+    state.pickerArtist = null;
     state.variant = 0;
     state.semitones = 0;
     state.pinned = new Set();
