@@ -785,6 +785,32 @@
      поэтому приглушаем, чтобы не читались наравне со строчками. */
   .lyrics.note { color: var(--ink-soft); }
 
+  /* Разделы песни: припев — цветная полоса с подложкой, подводки и проигрыши —
+     бледная полоса. Куплеты остаются как есть, так переход виден сразу.
+     Отступы в em: при подгонке шрифта под экран они сжимаются вместе с текстом. */
+  .sect {
+    padding: 0.25em 0.6em 0.25em 0.75em;
+    border-left: 3px solid var(--border);
+    border-radius: 0 6px 6px 0;
+  }
+
+  .sect-chorus {
+    border-left-color: var(--accent);
+    background: var(--accent-wash);
+  }
+
+  .sect-label {
+    font-family: var(--font-body);
+    font-size: 0.78em;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: 0.15em;
+  }
+
+  .sect-chorus .sect-label { color: var(--accent-strong); }
+
   footer.note {
     margin-top: 22px;
     font-size: 12.5px;
@@ -1108,10 +1134,108 @@
     });
   }
 
+  // Подпись раздела: «Припев:», «Проигрыш: х2», «[Вступление]:», «SOLO».
+  const SECTION_LABEL = /^\s*\[?\s*(пред-?припев|припев|бридж|проигрыш|вступление|интро|кода|аутро|финал|соло|solo|intro|outro|chorus|bridge)\s*\]?\s*:?\s*([xх×]\s*\d+)?\s*:?\s*$/i;
+
+  function labelKind(name) {
+    const n = name.toLowerCase();
+    return n.startsWith('припев') || n === 'chorus' ? 'chorus' : 'soft';
+  }
+
+  function leadingSpaces(s) {
+    return s.length - s.trimStart().length;
+  }
+
+  // Делит текст на разделы, чтобы переход от куплета к припеву был виден.
+  // Опираемся только на явные пометки в файле, повторы текста не считаем:
+  //  - подпись «Припев:» и прочие (раздел тянется до пустой строки; если подпись
+  //    стоит одна, она относится к следующему блоку);
+  //  - отступ всего блока. Куплеты пишутся без отступа, самый глубокий отступ
+  //    в песне — припев, отступ поменьше — подводка к нему.
+  function sectionize(lines) {
+    const items = [];
+    let cur = null;
+    const close = () => { if (cur) items.push(cur); cur = null; };
+
+    for (const line of lines) {
+      if (line.blank) { close(); items.push({ blank: true }); continue; }
+      const m = SECTION_LABEL.exec(line.lyric);
+      if (m) {
+        close();
+        const kind = labelKind(m[1]);
+        // подпись с аккордами («Проигрыш: [Am]») — это строка, которую играют, её оставляем
+        cur = line.chords.length
+          ? { kind, label: '', lines: [line] }
+          : { kind, label: line.lyric.trim().replace(/:\s*$/, '').replace(/^\[(.*)\]$/, '$1'), lines: [] };
+        continue;
+      }
+      if (!cur) cur = { kind: null, label: '', lines: [] };
+      cur.lines.push(line);
+    }
+    close();
+    // Одинокая подпись («SOLO» перед пустой строкой) остаётся сама по себе:
+    // к следующему куплету её не приклеиваем, он поётся как обычно.
+    const labeledChorus = items.some(it => it.kind === 'chorus');
+
+    // разделы с отступом
+    let deepest = 0;
+    for (const it of items) {
+      if (it.blank || !it.lines.length) continue;
+      const indents = it.lines.filter(l => l.lyric.trim()).map(l => leadingSpaces(l.lyric));
+      it.indent = indents.length ? Math.min(...indents) : 0;
+      if (it.kind === null && it.indent >= 2 && it.lines.length >= 2) {
+        it.kind = 'indent';
+        deepest = Math.max(deepest, it.indent);
+      }
+    }
+    // Нет ни подписей, ни отступов — припев узнаём по повтору: блок, чьи первые
+    // две строки встречаются в песне ещё раз. Считаем внутри одного варианта аккордов,
+    // поэтому одинаковые варианты друг другу не мешают.
+    if (!labeledChorus && !deepest) {
+      const head = it => it.lines.slice(0, 2).map(l => normalize(l.lyric).replace(/[^a-zа-я0-9]+/g, ' ').trim()).join('/');
+      const counts = new Map();
+      for (const it of items) {
+        if (it.blank || it.kind || it.lines.length < 2) continue;
+        const h = head(it);
+        if (h.replace(/[^a-zа-я0-9]/g, '').length >= 10) counts.set(h, (counts.get(h) || 0) + 1);
+      }
+      for (const it of items) {
+        if (!it.blank && !it.kind && it.lines.length >= 2 && counts.get(head(it)) > 1) it.kind = 'chorus';
+      }
+    }
+
+    for (const it of items) {
+      // если припев подписан, отступ отмечает что-то другое (вставку, подводку)
+      if (it.kind === 'indent') it.kind = labeledChorus ? 'soft' : it.indent === deepest ? 'chorus' : 'soft';
+      // у выделенного раздела отступ заменяет полоса слева — лишние пробелы убираем,
+      // аккорды сдвигаем вместе с текстом
+      if (it.kind && it.indent) {
+        const k = it.indent;
+        it.lines = it.lines.map(l => ({
+          lyric: l.lyric.slice(Math.min(k, leadingSpaces(l.lyric))),
+          chords: l.chords.map(c => ({ ...c, pos: Math.max(0, c.pos - k) })),
+        }));
+      }
+    }
+    return items;
+  }
+
   function renderSheetHTML(parsedLines, semitones) {
     let html = '';
-    for (const line of parsedLines) {
-      if (line.blank) { html += `<div class="line blank"></div>`; continue; }
+    for (const it of sectionize(parsedLines)) {
+      if (it.blank) { html += `<div class="line blank"></div>`; continue; }
+      const body = it.lines.map(l => lineHTML(l, semitones)).join('');
+      if (!it.kind) { html += body; continue; }
+      html += `<div class="sect sect-${it.kind}">` +
+        (it.label ? `<div class="sect-label">${escapeHTML(it.label)}</div>` : '') +
+        body + `</div>`;
+    }
+    return html;
+  }
+
+  function lineHTML(line, semitones) {
+    let html = '';
+    {
       let chordRow = '';
       let len = 0;
       for (const { pos, chord } of line.chords) {
